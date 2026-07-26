@@ -64,16 +64,26 @@ h3 `1.3rem` · body `1rem`/1.7 · data `0.72rem`.
   than twice per page).
 - **The Z-route mark** — the logo Z drawn as a route diagram: two horizontals
   and a diagonal, with a node at origin and destination.
-- **Reference codes** — every page (`ZL-01`), every service (`FR-01`, `WD-02`,
-  `XB-03`) and every form (`ZL/ENQ/01`) carries a mono code.
+- **Section chevrons** — every section opens with two red chevrons, a label and
+  a rule running to the edge (`SecMark.astro`). Directional, because freight
+  moves. **Deliberately unnumbered:** the site carries no page numbers, sheet
+  numbers, figure numbers or form numbers. It is a company, not a document.
+- **Real codes only** — the only identifiers shown are ones the business
+  actually uses: depot codes (`JNB` / `CPT` / `DUR`), division codes
+  (`FR` / `WD` / `XB`) and service refs (`FR-01`, `WD-02`).
 - **Route lines** — a rule with square nodes and mono place labels, measuring a
   real corridor (`JHB ●━━━━━━● CPT · 1 400 KM · 2 DAYS`).
 - **Stencil plates** — bordered mono blocks like the ID plate on a container,
   used for statuses and category marks.
 - **Manifest tables** — hairline-ruled tables with mono headers and a red rule
   under the header row. Services and lead times are tables, not card grids.
-- **Manifest block** — the footer is a consignment note header: CONSIGNOR /
-  ORIGIN / SERVICE / REF / ISSUE / SHEET.
+- **The map** — a real South Africa, projected from longitude/latitude at build
+  time (`src/data/geo.ts`), never hand-placed. Depots are red squares, border
+  posts red discs, routes dashed: white for domestic linehaul, red for
+  cross-border. Every label carries a dark `paint-order: stroke` halo so text
+  never sits under a route line.
+- **Depot strip** — the footer opens with the three depots and the 24/7 desk,
+  and ends on a plain legal line.
 
 ## Components
 

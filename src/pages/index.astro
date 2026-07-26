@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import { divisions, cycle, lanes, corridors, stats, commitments, placeNames } from '../data/company';
+import SecMark from '../components/SecMark.astro';
+import { divisions, cycle, lanes, corridors, stats, commitments, placeNames, hubs } from '../data/company';
 
 // The home page shows the first four lanes; /network carries the full table.
 const featuredLanes = lanes.slice(0, 4);
@@ -9,17 +10,17 @@ const featuredCorridors = corridors.slice(0, 3);
 <Base
   title="Zanzi Logistics · Road Freight, Warehousing & Cross-Border"
   description="Zanzi Logistics moves road freight, warehousing and cross-border cargo across South Africa and into SADC. FTL and LTL, 3PL warehousing and distribution, customs clearing and international forwarding."
-  ref="ZL-01"
-  refName="Home"
 >
 
   <!-- ═══ Hero ═══ -->
   <header class="hero">
     <div class="container hero-stack">
       <div class="data-strip">
-        <span class="data"><strong>Ref ZL-01</strong> &middot; Home</span>
-        <span class="data">Road freight &middot; 3PL &middot; Cross-border</span>
+        <span class="data"><strong>Road freight</strong> &middot; 3PL &middot; Cross-border</span>
         <span class="data">South Africa &middot; SADC &middot; International</span>
+        <span class="data">
+          Depots {hubs.map((h, i) => <>{i > 0 && ' · '}<strong>{h.code}</strong></>)}
+        </span>
       </div>
 
       <h1 class="display">
@@ -94,7 +95,6 @@ const featuredCorridors = corridors.slice(0, 3);
             <!-- red foot -->
             <rect class="n-foot" x="8" y="234" width="304" height="6" />
           </svg>
-          <figcaption class="data">fig. 01 &middot; consignment note, booked</figcaption>
         </figure>
       </div>
     </div>
@@ -118,7 +118,7 @@ const featuredCorridors = corridors.slice(0, 3);
   <section>
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">A &middot; What we move</span></div>
+        <SecMark label="What we move" />
         <h2 class="display">Three <em>divisions,</em><br />one waybill.</h2>
         <p class="sub">
           Most freight jobs are not just a truck. They are a truck, a warehouse
@@ -149,7 +149,7 @@ const featuredCorridors = corridors.slice(0, 3);
   <section class="ink-section">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">B &middot; How a load moves</span></div>
+        <SecMark label="How a load moves" />
         <h2 class="display">Booked. Collected.<br />Routed. <em>Delivered.</em></h2>
         <p class="sub">
           Every consignment runs the same four steps, whether it is one pallet
@@ -174,7 +174,7 @@ const featuredCorridors = corridors.slice(0, 3);
   <section class="dim">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">C &middot; The network</span></div>
+        <SecMark label="The network" />
         <h2 class="display">Nine provinces,<br />five <em>corridors.</em></h2>
         <p class="sub">
           Scheduled linehaul between our own depots, delivery into any address
@@ -238,7 +238,7 @@ const featuredCorridors = corridors.slice(0, 3);
   <section>
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">D &middot; How we operate</span></div>
+        <SecMark label="How we operate" />
         <h2 class="display">Four things we<br /><em>will not</em> get wrong.</h2>
       </div>
 

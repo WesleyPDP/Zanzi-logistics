@@ -9,16 +9,11 @@ import { company, contact, hubs, divisions } from '../data/company';
 interface Props {
   title: string;
   description?: string;
-  /** Manifest reference shown in the footer block, e.g. "ZL-01" */
-  ref?: string;
-  refName?: string;
 }
 
 const {
   title,
   description = 'Zanzi Logistics moves road freight, warehousing and cross-border cargo across South Africa and into the SADC region. FTL and LTL, 3PL warehousing, customs clearing and international forwarding.',
-  ref = 'ZL-00',
-  refName = 'Sheet',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -117,6 +112,21 @@ const schema = {
   <footer>
     <div class="hazard" aria-hidden="true"></div>
     <div class="footer-inner">
+      <div class="depot-strip">
+        {hubs.map((h) => (
+          <div class="ds-item">
+            <span class="ds-code">{h.code}</span>
+            <span class="ds-city">{h.city}</span>
+            <span class="data">{h.address}</span>
+          </div>
+        ))}
+        <div class="ds-item">
+          <span class="ds-code">24/7</span>
+          <span class="ds-city">Operations desk</span>
+          <a href={contact.opsPhoneHref}>{contact.opsPhone}</a>
+        </div>
+      </div>
+
       <div class="footer-top">
         <div class="footer-brand">
           <a href="/" class="wordmark">
@@ -177,15 +187,6 @@ const schema = {
         <span class="data">&copy; {year} {company.legalName} &middot; Reg {company.regNo}</span>
         <span class="data">{hq.city} &middot; South Africa</span>
       </div>
-
-      <dl class="manifest-block" aria-label="Consignment manifest">
-        <div class="mb-cell"><dt>Consignor</dt><dd>{company.name}</dd></div>
-        <div class="mb-cell"><dt>Origin</dt><dd>{hq.code} &middot; {hq.city}</dd></div>
-        <div class="mb-cell"><dt>Coverage</dt><dd>RSA &amp; SADC</dd></div>
-        <div class="mb-cell"><dt>Service</dt><dd>Road &middot; 3PL &middot; Customs</dd></div>
-        <div class="mb-cell"><dt>Ref</dt><dd><span class="mb-red">{ref}</span> &middot; {refName}</dd></div>
-        <div class="mb-cell"><dt>Issue</dt><dd>{year}</dd></div>
-      </dl>
     </div>
   </footer>
 

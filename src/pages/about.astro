@@ -1,18 +1,16 @@
 ---
 import Base from '../layouts/Base.astro';
+import SecMark from '../components/SecMark.astro';
 import { company, contact, commitments, compliance, hubs, cycle } from '../data/company';
 ---
 <Base
   title="Company · About Zanzi Logistics"
   description="Zanzi Logistics is a South African freight, warehousing and customs operator running its own depots in Johannesburg, Cape Town and Durban. How we operate, what we commit to, and the cover we carry."
-  ref="ZL-04"
-  refName="Company"
 >
 
   <header class="page-hero">
     <div class="container hero-stack">
       <div class="data-strip">
-        <span class="data"><strong>Ref ZL-04</strong> &middot; Company</span>
         <span class="data">{company.legalName}</span>
         <span class="data">Est. {company.founded}</span>
       </div>
@@ -32,7 +30,7 @@ import { company, contact, commitments, compliance, hubs, cycle } from '../data/
   <section>
     <div class="container about-grid">
       <div class="rv">
-        <div class="sec-ref"><span class="data">A &middot; The company</span></div>
+        <SecMark label="The company" />
         <h2 class="display">Built around one<br />ordinary <em>complaint.</em></h2>
       </div>
 
@@ -72,7 +70,7 @@ import { company, contact, commitments, compliance, hubs, cycle } from '../data/
   <section id="commitments" class="ink-section">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">B &middot; How we operate</span></div>
+        <SecMark label="How we operate" />
         <h2 class="display">Four things we<br /><em>will not</em> get wrong.</h2>
         <p class="sub">
           These are not aspirations. They are the terms we work to, and you
@@ -96,7 +94,7 @@ import { company, contact, commitments, compliance, hubs, cycle } from '../data/
   <section class="dim">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">C &middot; The operating cycle</span></div>
+        <SecMark label="The operating cycle" />
         <h2 class="display">Same four steps,<br />every <em>load.</em></h2>
         <p class="sub">
           One pallet to Polokwane or a full trailer to Lusaka &mdash; the
@@ -122,7 +120,7 @@ import { company, contact, commitments, compliance, hubs, cycle } from '../data/
   <section id="compliance">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">D &middot; Cover &amp; compliance</span></div>
+        <SecMark label="Cover & compliance" />
         <h2 class="display">The <em>boring</em> part<br />that matters.</h2>
         <p class="sub">
           Nobody asks about insurance until something has already gone wrong.

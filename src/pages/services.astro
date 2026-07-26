@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import SecMark from '../components/SecMark.astro';
 import { divisions, equipment, quoteChecklist } from '../data/company';
 
 // Divisions alternate paper / dim down the page.
@@ -9,15 +10,15 @@ const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
 <Base
   title="Services · Road Freight, Warehousing & Customs · Zanzi Logistics"
   description="Zanzi Logistics services: FTL and LTL road freight, containerised and abnormal haulage, 3PL warehousing, pick and pack, cross-docking, SADC cross-border freight, customs clearing and international forwarding."
-  ref="ZL-02"
-  refName="Services"
 >
 
   <header class="page-hero">
     <div class="container hero-stack">
       <div class="data-strip">
-        <span class="data"><strong>Ref ZL-02</strong> &middot; Services</span>
         <span class="data">{divisions.length} divisions &middot; {serviceCount} services</span>
+        <span class="data">
+          {divisions.map((d, i) => <>{i > 0 && ' · '}<strong>{d.code}</strong></>)}
+        </span>
       </div>
       <h1 class="display">What we <em>move,</em><br />hold and clear.</h1>
       <p class="page-sub">
@@ -52,7 +53,7 @@ const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
     <section id={d.slug} class={bands[i]}>
       <div class="container">
         <div class="sec-head rv">
-          <div class="sec-ref"><span class="data">{d.code} &middot; Division {String(i + 1).padStart(2, '0')}</span></div>
+          <SecMark label={`Division ${d.code}`} />
           <h2 class="display">{d.name}</h2>
           <p class="sub">{d.blurb}</p>
         </div>
@@ -85,7 +86,7 @@ const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
   <section class="ink-section">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">E &middot; Equipment</span></div>
+        <SecMark label="Equipment" />
         <h2 class="display">The right vehicle,<br />not the <em>nearest</em> one.</h2>
         <p class="sub">
           The vehicle is chosen from the mass, the dimensions and what is at
@@ -123,7 +124,7 @@ const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
   <section class="dim">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">F &middot; Before you ask</span></div>
+        <SecMark label="Before you ask" />
         <h2 class="display">Six answers and<br />you have a <em>rate.</em></h2>
         <p class="sub">
           Send these with your enquiry and the quote comes back same-day.

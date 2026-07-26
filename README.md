@@ -39,14 +39,14 @@ The site is also not connected to an inbox yet. See
 
 ## Pages
 
-| Route | Ref | Purpose |
-|---|---|---|
-| `/` | ZL-01 | Hero, capability strip, three divisions, operating cycle, network snapshot, commitments, CTA |
-| `/services` | ZL-02 | The three divisions in full, equipment table, what we need to quote |
-| `/network` | ZL-03 | Depots, route schematic, domestic lead times, SADC corridors, international forwarding |
-| `/about` | ZL-04 | The company, operating commitments, cover and compliance, registration details |
-| `/contact` | ZL-05 | Freight enquiry form, contact lines, depot list |
-| `/404` | ZL-404 | Not found |
+| Route | Purpose |
+|---|---|
+| `/` | Hero, capability strip, three divisions, operating cycle, network snapshot, commitments, CTA |
+| `/services` | The three divisions in full, equipment table, what we need to quote |
+| `/network` | Depots, the network map, domestic lead times, SADC corridors, international forwarding |
+| `/about` | The company, operating commitments, cover and compliance, registration details |
+| `/contact` | Freight enquiry form, contact lines, depot list |
+| `/404` | Not found |
 
 Redirects are configured in `astro.config.mjs`: `/quote` → `/contact`,
 `/coverage` → `/network`, `/freight` → `/services`.
@@ -74,9 +74,23 @@ the site's one chromatic colour and is always load-bearing. Black bands and
 paper bands alternate down every page.
 
 Type is Oswald (display), IBM Plex Sans (body) and IBM Plex Mono (all
-reference codes, labels and table headers), all self-hosted via Fontsource.
+codes, labels and table headers), all self-hosted via Fontsource.
 Full rationale and the accessibility contract are in **[DESIGN.md](DESIGN.md)**;
 tokens live in `src/styles/global.css`.
+
+**No page, sheet, figure or form numbers anywhere.** Sections are marked with
+red chevrons (`src/components/SecMark.astro`) and the only identifiers on the
+site are ones the business really uses — depot codes (JNB/CPT/DUR), division
+codes (FR/WD/XB) and service refs (FR-01, WD-02).
+
+### The network map
+
+`/network` carries a map of South Africa drawn from real longitude/latitude in
+[`src/data/geo.ts`](src/data/geo.ts) and projected at build time — no
+hand-placed coordinates, so the shape stays correct if the viewBox changes.
+Edit the `mapDepots`, `mapCities`, `mapBorders` and `mapRoutes` arrays to
+change what is plotted; `dx`/`dy`/`anchor` position each label. It is a static
+illustration with no interactivity.
 
 ## Quote form
 

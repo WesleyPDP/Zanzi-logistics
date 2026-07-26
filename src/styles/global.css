@@ -213,31 +213,66 @@ p { max-width: 66ch; }
 .ink-section .data-strip, .drench .data-strip { border-bottom-color: var(--rule-on-ink); }
 .drench .data-strip { border-bottom-color: rgba(18, 18, 18, 0.35); }
 
-/* section heading: reference code + rule running to the edge */
+/* ── Section mark ──
+   Two red chevrons pointing into the label, then a rule running out
+   to the edge. Directional, because freight moves. No numbering:
+   the only identifiers on this site are ones the business really
+   uses — depot codes (JNB/CPT/DUR) and division codes (FR/WD/XB). */
 .sec-head { margin-bottom: clamp(2.2rem, 5vw, 3.6rem); }
-.sec-ref {
+.sec-mark {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 0.9rem;
   margin-bottom: 1.5rem;
 }
-.sec-ref .data { white-space: nowrap; color: var(--red-deep); font-weight: 600; }
-.ink-section .sec-ref .data { color: var(--red-bright); }
-.drench .sec-ref .data { color: var(--on-red); }
-.sec-ref::after {
+.sec-mark .chev {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  fill: var(--red);
+}
+.sec-mark .sec-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.sec-mark::after {
   content: '';
   height: 2px;
   flex: 1;
   background: var(--red);
 }
-/* the reference rule runs out to the edge as the section reveals */
-.js .rv .sec-ref::after {
+/* the rule runs out to the edge as the section reveals */
+.js .rv .sec-mark::after {
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.9s var(--ease-haul) 0.1s;
 }
-.js .rv.in .sec-ref::after { transform: scaleX(1); }
-.drench .sec-ref::after { background: var(--on-red); }
+.js .rv.in .sec-mark::after { transform: scaleX(1); }
+
+.ink-section .sec-mark .sec-label { color: var(--paper-on-ink); }
+.ink-section .sec-mark .chev { fill: var(--red-bright); }
+.drench .sec-mark .sec-label { color: var(--ink); }
+.drench .sec-mark .chev { fill: var(--ink); }
+.drench .sec-mark::after { background: var(--ink); }
+
+/* the chevrons advance slightly when their section arrives */
+.js .rv .sec-mark .chev, .js .rv-group .sec-mark .chev {
+  transform: translateX(-8px);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-haul) 0.05s, opacity 0.5s var(--ease-haul) 0.05s;
+}
+.js .rv.in .sec-mark .chev, .js .rv-group.in .sec-mark .chev {
+  transform: none;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .js .rv .sec-mark .chev, .js .rv-group .sec-mark .chev { transform: none; opacity: 1; }
+}
 
 .sec-head .sub {
   margin-top: 1.2rem;
@@ -697,8 +732,9 @@ footer {
 .footer-col a { font-size: 0.9rem; color: var(--mist-on-ink); transition: color 0.15s; }
 .footer-col a:hover { color: var(--paper-on-ink); }
 
+/* the footer ends on a plain legal line — no title block, no sheet number */
 .footer-legal {
-  padding: 1.4rem 0;
+  padding: 1.4rem 0 2.2rem;
   border-top: 1px solid var(--rule-on-ink);
   display: flex;
   justify-content: space-between;
@@ -706,58 +742,50 @@ footer {
   gap: 0.6rem 2rem;
 }
 
-/* the consignment note header, as a footer */
-.manifest-block {
+/* ── Depot strip ──
+   Opens the footer with the three depots and the 24/7 desk: real
+   operational information rather than a document header. */
+.depot-strip {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  border: 1px solid var(--rule-on-ink-strong);
-  border-bottom: none;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--rule-on-ink);
+  border: 1px solid var(--rule-on-ink);
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
-.mb-cell {
-  padding: 0.7rem 0.9rem 0.8rem;
-  border-right: 1px solid var(--rule-on-ink-strong);
+.ds-item {
+  background: var(--ink);
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
   min-width: 0;
 }
-.mb-cell:last-child { border-right: none; }
-.mb-cell dt {
-  font-family: var(--font-mono);
-  font-size: 0.52rem;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--mist-on-ink);
-  margin-bottom: 0.3rem;
+.ds-code {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  color: var(--red-bright);
 }
-.mb-cell dd {
+.ds-city { font-weight: 600; font-size: 0.94rem; }
+.ds-item .data { line-height: 1.5; }
+.ds-item a {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--paper-on-ink);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: color 0.15s;
 }
-.mb-cell dd .mb-red { color: var(--red-bright); }
+.ds-item a:hover { color: var(--red-bright); }
 
 @media (max-width: 940px) {
   .footer-top { grid-template-columns: 1fr 1fr; gap: 2.25rem; }
   .footer-brand { grid-column: 1 / -1; }
-  .manifest-block { grid-template-columns: repeat(3, 1fr); }
-  .mb-cell:nth-child(3n) { border-right: none; }
-  .mb-cell:nth-child(-n+3) { border-bottom: 1px solid var(--rule-on-ink-strong); }
+  .depot-strip { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
   .footer-top { grid-template-columns: 1fr; }
-  /* phone: two columns, values wrap instead of truncating */
-  .manifest-block { grid-template-columns: 1fr 1fr; }
-  .mb-cell:nth-child(3n) { border-right: 1px solid var(--rule-on-ink-strong); }
-  .mb-cell:nth-child(2n) { border-right: none; }
-  .mb-cell:nth-child(4) { border-bottom: 1px solid var(--rule-on-ink-strong); }
-  .mb-cell dd {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-  }
+  .depot-strip { grid-template-columns: 1fr; }
 }

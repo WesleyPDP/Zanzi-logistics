@@ -1,0 +1,18 @@
+---
+/**
+ * Section marker: two red chevrons pointing into a label, with a rule
+ * running out to the edge. This is the site's only section identifier —
+ * deliberately unnumbered, so no page reads like a numbered document.
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<div class="sec-mark">
+  <svg class="chev" viewBox="0 0 13 13" aria-hidden="true">
+    <path d="M0 0 L5 6.5 L0 13 Z" />
+    <path d="M8 0 L13 6.5 L8 13 Z" />
+  </svg>
+  <span class="sec-label">{label}</span>
+</div>

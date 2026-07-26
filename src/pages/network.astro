@@ -1,18 +1,36 @@
 ---
 import Base from '../layouts/Base.astro';
+import SecMark from '../components/SecMark.astro';
 import { hubs, lanes, corridors, placeNames } from '../data/company';
+import {
+  southAfrica, lesotho, mapDepots, mapCities, mapBorders, mapNeighbours,
+  mapRoutes, project, ringToPath, VIEW_W, VIEW_H,
+} from '../data/geo';
+
+// The landmass is one path with two rings; fill-rule evenodd punches
+// Lesotho out of it.
+const landPath = `${ringToPath(southAfrica)} ${ringToPath(lesotho)}`;
+
+// Route legs are given as place codes, so resolve them to projected points.
+const allPlaces = [...mapDepots, ...mapCities, ...mapBorders];
+const leg = ([from, to]: readonly [string, string]) => {
+  const a = allPlaces.find((p) => p.code === from)!;
+  const b = allPlaces.find((p) => p.code === to)!;
+  const [x1, y1] = project(a.lon, a.lat);
+  const [x2, y2] = project(b.lon, b.lat);
+  return { x1, y1, x2, y2 };
+};
+const domesticLegs = mapRoutes.domestic.map(leg);
+const borderLegs = mapRoutes.crossBorder.map(leg);
 ---
 <Base
   title="Network · Depots, Lead Times & Cross-Border · Zanzi Logistics"
   description="The Zanzi Logistics network: depots in Johannesburg, Cape Town and Durban, scheduled national linehaul with indicative lead times, SADC cross-border corridors, and international sea and air forwarding."
-  ref="ZL-03"
-  refName="Network"
 >
 
   <header class="page-hero">
     <div class="container hero-stack">
       <div class="data-strip">
-        <span class="data"><strong>Ref ZL-03</strong> &middot; Network</span>
         <span class="data">{hubs.length} depots &middot; 9 provinces &middot; {corridors.length} corridors</span>
       </div>
       <h1 class="display">Where we <em>run.</em></h1>
@@ -31,7 +49,7 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
   <section id="depots">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">A &middot; Depots</span></div>
+        <SecMark label="Depots" />
         <h2 class="display">Three <em>depots,</em><br />one operation.</h2>
         <p class="sub">
           Every load routes through a depot we run ourselves. Nothing sits in a
@@ -56,100 +74,121 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
     </div>
   </section>
 
-  <!-- ═══ Schematic ═══ -->
+  <!-- ═══ The map ═══ -->
   <section class="ink-section">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">B &middot; Route schematic</span></div>
+        <SecMark label="Where we run" />
         <h2 class="display">The lines we <em>run</em> weekly.</h2>
         <p class="sub">
-          Solid runs are scheduled domestic linehaul. Dashed runs cross a
-          border. This is a schematic of the network, not a map &mdash; it is
-          not to scale and it is not a route plan.
+          White runs are scheduled domestic linehaul between our depots. Red
+          runs cross a border. Positions are drawn from real coordinates; the
+          routes are simplified to the corridor, not the road.
         </p>
       </div>
 
-      <figure class="schematic rv">
-        <svg viewBox="0 0 720 400" role="img" aria-labelledby="sch-title sch-desc">
-          <title id="sch-title">Zanzi Logistics route schematic</title>
-          <desc id="sch-desc">
-            A schematic diagram of the Zanzi Logistics network. Depots at
-            Johannesburg, Cape Town and Durban are linked by scheduled domestic
-            linehaul, which also serves Polokwane, Bloemfontein and Gqeberha.
-            Cross-border routes run from Johannesburg and Bloemfontein to the
-            Beitbridge, Lebombo, Skilpadshek and Nakop border posts. The full
-            detail is given in the tables on this page.
+      <div class="map-wrap rv">
+        <svg
+          class="map"
+          viewBox={`0 0 ${VIEW_W} ${VIEW_H}`}
+          role="img"
+          aria-labelledby="map-title map-desc"
+        >
+          <title id="map-title">Map of the Zanzi Logistics network in South Africa</title>
+          <desc id="map-desc">
+            A map of South Africa showing depots at Johannesburg, Cape Town and
+            Durban, linked by scheduled linehaul that also serves Polokwane,
+            Bloemfontein and Gqeberha. Cross-border routes run to the Beitbridge
+            border with Zimbabwe, Lebombo with Mozambique, Skilpadshek with
+            Botswana and Nakop with Namibia. The same information is given
+            precisely in the lead-time and corridor tables on this page.
           </desc>
 
-          <!-- domestic runs -->
-          <g class="s-dom">
-            <line x1="390" y1="140" x2="400" y2="70" pathLength="100" />
-            <line x1="390" y1="140" x2="500" y2="250" pathLength="100" />
-            <line x1="390" y1="140" x2="330" y2="235" pathLength="100" />
-            <line x1="330" y1="235" x2="120" y2="345" pathLength="100" />
-            <line x1="330" y1="235" x2="300" y2="340" pathLength="100" />
-            <line x1="500" y1="250" x2="300" y2="340" pathLength="100" />
-            <line x1="300" y1="340" x2="120" y2="345" pathLength="100" />
+          <!-- landmass, with Lesotho cut out -->
+          <path class="m-land" d={landPath} fill-rule="evenodd" />
+
+          <!-- neighbouring countries -->
+          <g class="m-neighbour">
+            {mapNeighbours.map((n) => {
+              const [x, y] = project(n.lon, n.lat);
+              return <text x={x} y={y} text-anchor="middle">{n.name}</text>;
+            })}
           </g>
 
-          <!-- cross-border runs -->
-          <g class="s-xb">
-            <line x1="400" y1="70" x2="432" y2="26" pathLength="100" />
-            <line x1="390" y1="140" x2="262" y2="62" pathLength="100" />
-            <line x1="390" y1="140" x2="558" y2="106" pathLength="100" />
-            <line x1="330" y1="235" x2="72" y2="216" pathLength="100" />
+          <!-- domestic linehaul -->
+          <g class="m-dom">
+            {domesticLegs.map((l) => (
+              <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+            ))}
+          </g>
+
+          <!-- cross-border corridors -->
+          <g class="m-xb">
+            {borderLegs.map((l) => (
+              <line x1={l.x1} y1={l.y1} x2={l.x2} y2={l.y2} />
+            ))}
           </g>
 
           <!-- border posts -->
-          <g class="s-border">
-            <circle cx="432" cy="26" r="5" />
-            <text x="444" y="24">Beitbridge &#183; ZWE</text>
-            <circle cx="262" cy="62" r="5" />
-            <text x="274" y="60">Skilpadshek &#183; BWA</text>
-            <circle cx="558" cy="106" r="5" />
-            <text x="570" y="104">Lebombo &#183; MOZ</text>
-            <circle cx="72" cy="216" r="5" />
-            <text x="84" y="214">Nakop &#183; NAM</text>
+          <g class="m-border">
+            {mapBorders.map((b) => {
+              const [x, y] = project(b.lon, b.lat);
+              return (
+                <>
+                  <circle cx={x} cy={y} r="5.5" />
+                  <text x={x + b.dx} y={y + b.dy} text-anchor={b.anchor}>{b.name}</text>
+                </>
+              );
+            })}
           </g>
 
-          <!-- intermediate cities -->
-          <g class="s-city">
-            <rect x="396" y="66" width="8" height="8" />
-            <text x="410" y="66">Polokwane</text>
-            <rect x="326" y="231" width="8" height="8" />
-            <text x="340" y="231">Bloemfontein</text>
-            <rect x="296" y="336" width="8" height="8" />
-            <text x="310" y="336">Gqeberha</text>
+          <!-- route waypoints -->
+          <g class="m-city">
+            {mapCities.map((c) => {
+              const [x, y] = project(c.lon, c.lat);
+              return (
+                <>
+                  <rect x={x - 4} y={y - 4} width="8" height="8" />
+                  <text x={x + c.dx} y={y + c.dy} text-anchor={c.anchor}>{c.name}</text>
+                </>
+              );
+            })}
           </g>
 
           <!-- depots -->
-          <g class="s-depot">
-            <rect x="383" y="133" width="14" height="14" />
-            <text x="405" y="136">JNB</text>
-            <text class="s-depot-sub" x="405" y="150">Johannesburg</text>
-
-            <rect x="493" y="243" width="14" height="14" />
-            <text x="515" y="246">DUR</text>
-            <text class="s-depot-sub" x="515" y="260">Durban</text>
-
-            <rect x="113" y="338" width="14" height="14" />
-            <text x="135" y="341">CPT</text>
-            <text class="s-depot-sub" x="135" y="355">Cape Town</text>
+          <g class="m-depot">
+            {mapDepots.map((d) => {
+              const [x, y] = project(d.lon, d.lat);
+              return (
+                <>
+                  <rect x={x - 7} y={y - 7} width="14" height="14" />
+                  <text x={x + d.dx} y={y + d.dy} text-anchor={d.anchor}>{d.code}</text>
+                  <text
+                    class="m-depot-sub"
+                    x={x + d.dx}
+                    y={y + d.dy + 15}
+                    text-anchor={d.anchor}
+                  >{d.name}</text>
+                </>
+              );
+            })}
           </g>
 
           <!-- key -->
-          <g class="s-key">
-            <line class="s-key-dom" x1="24" y1="30" x2="60" y2="30" />
-            <text x="68" y="33">Domestic linehaul</text>
-            <line class="s-key-xb" x1="24" y1="52" x2="60" y2="52" />
-            <text x="68" y="55">Cross-border</text>
+          <g class="m-key">
+            <line class="m-key-dom" x1="30" y1="34" x2="66" y2="34" />
+            <text x="76" y="38">Domestic linehaul</text>
+            <line class="m-key-xb" x1="30" y1="60" x2="66" y2="60" />
+            <text x="76" y="64">Cross-border</text>
           </g>
         </svg>
-        <figcaption class="data">
-          fig. 02 &middot; network schematic, not to scale &middot; Zambia is served
-          via Beitbridge and Chirundu, under bond
-        </figcaption>
-      </figure>
+
+        <p class="map-note data">
+          Zambia is served via Beitbridge and Chirundu, under bond &middot;
+          delivery reaches any address in all nine provinces, not only the
+          points shown
+        </p>
+      </div>
     </div>
   </section>
 
@@ -157,7 +196,7 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
   <section id="lanes" class="dim">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">C &middot; Domestic lead times</span></div>
+        <SecMark label="Domestic lead times" />
         <h2 class="display">How long it <em>takes.</em></h2>
         <p class="sub">
           Transit time is counted from collection, in working days. Part loads
@@ -204,7 +243,7 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
   <section id="corridors">
     <div class="container">
       <div class="sec-head rv">
-        <div class="sec-ref"><span class="data">D &middot; Cross-border corridors</span></div>
+        <SecMark label="Cross-border corridors" />
         <h2 class="display">Cleared before<br />the <em>border.</em></h2>
         <p class="sub">
           Entries are lodged and duties settled while the vehicle is still
@@ -248,7 +287,7 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
   <section id="international" class="dim">
     <div class="container int-grid">
       <div class="rv">
-        <div class="sec-ref"><span class="data">E &middot; International</span></div>
+        <SecMark label="International" />
         <h2 class="display">Beyond the <em>region.</em></h2>
         <p class="int-lead">
           Import and export beyond SADC is handled as freight forwarding: we
@@ -349,76 +388,105 @@ import { hubs, lanes, corridors, placeNames } from '../data/company';
   }
   @media (max-width: 900px) { .hub-grid { grid-template-columns: 1fr; } }
 
-  /* ── Schematic ── */
-  .schematic svg { width: 100%; height: auto; }
-  .schematic figcaption { margin-top: 1rem; }
+  /* ── The map ── */
+  .map-wrap { max-width: 860px; margin: 0 auto; }
+  .map { width: 100%; height: auto; }
+  .map-note {
+    margin-top: 1.2rem;
+    line-height: 1.7;
+    text-transform: none;
+    letter-spacing: 0.04em;
+    max-width: 68ch;
+  }
 
-  .s-dom line {
-    stroke: var(--paper-on-ink);
-    stroke-width: 2;
-    stroke-dasharray: 100;
-    stroke-dashoffset: 100;
+  /* the country sits just above the black band so the coastline reads */
+  .m-land {
+    fill: var(--ink-line);
+    stroke: var(--rule-on-ink-strong);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
   }
-  .s-xb line {
-    stroke: var(--red-bright);
-    stroke-width: 2;
-    stroke-dasharray: 6 5;
-  }
-  .js .rv .s-dom line { transition: stroke-dashoffset 1s var(--ease-haul) 0.2s; }
-  .js .rv.in .s-dom line { stroke-dashoffset: 0; }
-  .js .rv .s-xb line, .js .rv .s-border, .js .rv .s-city, .js .rv .s-depot, .js .rv .s-key {
-    opacity: 0;
-    transition: opacity 0.5s var(--ease-haul) 0.7s;
-  }
-  .js .rv.in .s-xb line, .js .rv.in .s-border, .js .rv.in .s-city,
-  .js .rv.in .s-depot, .js .rv.in .s-key { opacity: 1; }
-  /* without JS the dash offset would leave the domestic runs invisible */
-  html:not(.js) .s-dom line { stroke-dashoffset: 0; }
 
-  .s-border circle { fill: var(--red-bright); }
-  .s-border text {
+  .m-neighbour text {
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.1em;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    fill: var(--mist-on-ink);
+    opacity: 0.5;
+  }
+
+  /* Both route types are dashed; colour and dash length tell them apart.
+     No stroke-dashoffset reveal here — these styles are scoped, so a
+     selector rooted at `html.js` would be rewritten to `.js[data-astro-cid]`
+     and never match, leaving the routes permanently hidden. The whole
+     figure already fades in via .rv on .map-wrap. */
+  .m-dom line {
+    stroke: var(--paper-on-ink);
+    stroke-width: 2.5;
+    stroke-dasharray: 12 7;
+    stroke-linecap: butt;
+  }
+  .m-xb line {
+    stroke: var(--red-bright);
+    stroke-width: 2.5;
+    stroke-dasharray: 6 5;
+    stroke-linecap: butt;
+  }
+
+  /* Cartographic halo: the stroke is painted before the fill, so every
+     label knocks a dark gap out of any route line running behind it. */
+  .m-border text, .m-city text, .m-depot text {
+    paint-order: stroke;
+    stroke: var(--ink);
+    stroke-width: 5;
+    stroke-linejoin: round;
+  }
+
+  .m-border circle { fill: var(--red-bright); }
+  .m-border text {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     fill: var(--red-bright);
   }
-  .s-city rect { fill: var(--mist-on-ink); }
-  .s-city text {
+
+  .m-city rect { fill: var(--mist-on-ink); }
+  .m-city text {
     font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
+    font-size: 11px;
+    letter-spacing: 0.06em;
     fill: var(--mist-on-ink);
   }
-  .s-depot rect { fill: var(--red); }
-  .s-depot text {
+
+  .m-depot rect { fill: var(--red); }
+  .m-depot text {
     font-family: var(--font-display);
-    font-size: 17px;
+    font-size: 21px;
     font-weight: 700;
     letter-spacing: 0.05em;
     fill: var(--paper-on-ink);
   }
-  .s-depot .s-depot-sub {
+  .m-depot .m-depot-sub {
     font-family: var(--font-mono);
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 400;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     fill: var(--mist-on-ink);
   }
-  .s-key text {
+
+  .m-key text {
     font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     fill: var(--mist-on-ink);
   }
-  .s-key-dom { stroke: var(--paper-on-ink); stroke-width: 2; }
-  .s-key-xb { stroke: var(--red-bright); stroke-width: 2; stroke-dasharray: 6 5; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .s-dom line { stroke-dashoffset: 0; }
-  }
+  .m-key-dom { stroke: var(--paper-on-ink); stroke-width: 2.5; stroke-dasharray: 12 7; }
+  .m-key-xb { stroke: var(--red-bright); stroke-width: 2.5; stroke-dasharray: 6 5; }
 
   /* ── Tables ── */
   .table-note {
