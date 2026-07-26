@@ -1,0 +1,238 @@
+---
+import '@fontsource-variable/oswald/wght.css';
+import '@fontsource-variable/ibm-plex-sans/wght.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/600.css';
+import '../styles/global.css';
+import { company, contact, hubs, divisions } from '../data/company';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Manifest reference shown in the footer block, e.g. "ZL-01" */
+  ref?: string;
+  refName?: string;
+}
+
+const {
+  title,
+  description = 'Zanzi Logistics moves road freight, warehousing and cross-border cargo across South Africa and into the SADC region. FTL and LTL, 3PL warehousing, customs clearing and international forwarding.',
+  ref = 'ZL-00',
+  refName = 'Sheet',
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const isActive = (href: string) =>
+  href === '/' ? path === '/' : path.startsWith(href);
+const year = new Date().getFullYear();
+const hq = hubs.find((h) => h.primary) ?? hubs[0];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: company.name,
+  legalName: company.legalName,
+  description:
+    'Road freight, third-party warehousing and distribution, and cross-border and customs clearing across South Africa and the SADC region.',
+  url: Astro.site?.toString(),
+  telephone: contact.phone,
+  email: contact.email,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: hq.city,
+    addressRegion: 'Gauteng',
+    addressCountry: 'ZA',
+  },
+  areaServed: [
+    { '@type': 'Country', name: 'South Africa' },
+    { '@type': 'Place', name: 'SADC region' },
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Logistics services',
+    itemListElement: divisions.map((d) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name: d.name, description: d.short },
+    })),
+  },
+};
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#121212" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonicalURL} />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={company.name} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href={canonicalURL} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <title>{title}</title>
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="site-nav" id="site-nav" aria-label="Main">
+    <div class="nav-inner">
+      <a href="/" class="wordmark" aria-label={`${company.name}, home`}>
+        <svg class="zmark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect class="zm-plate" x="0" y="0" width="32" height="32" />
+          <path class="zm-z" d="M9 10 H23 L9 22 H23" />
+          <circle class="zm-node" cx="9" cy="10" r="2.4" />
+          <circle class="zm-node" cx="23" cy="22" r="2.4" />
+        </svg>
+        <span class="wm-stack">
+          <span class="wm-name">Zanzi</span>
+          <span class="wm-sub">Logistics</span>
+        </span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span>
+      </button>
+
+      <div class="nav-links">
+        <a href="/services" class={isActive('/services') ? 'active' : ''}>Services</a>
+        <a href="/network" class={isActive('/network') ? 'active' : ''}>Network</a>
+        <a href="/about" class={isActive('/about') ? 'active' : ''}>Company</a>
+        <a href="/contact" class={`nav-cta ${isActive('/contact') ? 'active' : ''}`}>Get a quote</a>
+      </div>
+    </div>
+    <div class="hazard hazard-thin" aria-hidden="true"></div>
+  </nav>
+
+  <main id="main">
+    <slot />
+  </main>
+
+  <footer>
+    <div class="hazard" aria-hidden="true"></div>
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="/" class="wordmark">
+            <svg class="zmark" viewBox="0 0 32 32" aria-hidden="true">
+              <rect class="zm-plate" x="0" y="0" width="32" height="32" />
+              <path class="zm-z" d="M9 10 H23 L9 22 H23" />
+              <circle class="zm-node" cx="9" cy="10" r="2.4" />
+              <circle class="zm-node" cx="23" cy="22" r="2.4" />
+            </svg>
+            <span class="wm-stack">
+              <span class="wm-name">Zanzi</span>
+              <span class="wm-sub">Logistics</span>
+            </span>
+          </a>
+          <p>
+            Road freight, warehousing and cross-border cargo, moved across South
+            Africa and into the SADC region. One controller, one waybill, one
+            number to call.
+          </p>
+          <div class="footer-contact">
+            <a href={contact.phoneHref}>{contact.phone}</a>
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="/services#road-freight">Road freight</a></li>
+            <li><a href="/services#warehousing">Warehousing &amp; 3PL</a></li>
+            <li><a href="/services#cross-border">Cross-border</a></li>
+            <li><a href="/services#cross-border">Customs clearing</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Network</h4>
+          <ul>
+            <li><a href="/network#depots">Depots</a></li>
+            <li><a href="/network#lanes">Lead times</a></li>
+            <li><a href="/network#corridors">Cross-border</a></li>
+            <li><a href="/network#international">International</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="/about">About Zanzi</a></li>
+            <li><a href="/about#commitments">How we operate</a></li>
+            <li><a href="/about#compliance">Compliance</a></li>
+            <li><a href="/contact">Get a quote</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-legal">
+        <span class="data">&copy; {year} {company.legalName} &middot; Reg {company.regNo}</span>
+        <span class="data">{hq.city} &middot; South Africa</span>
+      </div>
+
+      <dl class="manifest-block" aria-label="Consignment manifest">
+        <div class="mb-cell"><dt>Consignor</dt><dd>{company.name}</dd></div>
+        <div class="mb-cell"><dt>Origin</dt><dd>{hq.code} &middot; {hq.city}</dd></div>
+        <div class="mb-cell"><dt>Coverage</dt><dd>RSA &amp; SADC</dd></div>
+        <div class="mb-cell"><dt>Service</dt><dd>Road &middot; 3PL &middot; Customs</dd></div>
+        <div class="mb-cell"><dt>Ref</dt><dd><span class="mb-red">{ref}</span> &middot; {refName}</dd></div>
+        <div class="mb-cell"><dt>Issue</dt><dd>{year}</dd></div>
+      </dl>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav
+    const nav = document.getElementById('site-nav')!;
+    const toggle = document.getElementById('nav-toggle')!;
+    toggle.addEventListener('click', () => {
+      const open = nav.classList.toggle('nav-open');
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    nav.querySelectorAll('.nav-links a').forEach((a) =>
+      a.addEventListener('click', () => {
+        nav.classList.remove('nav-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      })
+    );
+
+    // Scroll reveals (.rv single elements, .rv-group staggered children).
+    // Hidden states only apply under html.js, so no-JS visitors see
+    // everything; anything already in the viewport reveals synchronously
+    // to avoid a flash when the class lands.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const targets = document.querySelectorAll('.rv, .rv-group');
+    if (!reduced) document.documentElement.classList.add('js');
+    if (reduced) {
+      targets.forEach((el) => el.classList.add('in'));
+    } else {
+      const vh = window.innerHeight;
+      const below: Element[] = [];
+      targets.forEach((el) => {
+        if (el.getBoundingClientRect().top < vh) el.classList.add('in');
+        else below.push(el);
+      });
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              io.unobserve(e.target);
+            }
+          }
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -6% 0px' }
+      );
+      below.forEach((el) => io.observe(el));
+    }
+  </script>
+</body>
+</html>

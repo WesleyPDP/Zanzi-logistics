@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { contact } from '../data/company';
+---
+<Base
+  title="Page Not Found · Zanzi Logistics"
+  description="This page could not be found. Head back to the Zanzi Logistics home page, or get in touch about a freight quote."
+  ref="ZL-404"
+  refName="Not found"
+>
+
+  <header class="page-hero nf">
+    <div class="container hero-stack">
+      <div class="data-strip">
+        <span class="data"><strong>Ref ZL-404</strong> &middot; Not found</span>
+        <span class="data">Consignment not on the manifest</span>
+      </div>
+      <h1 class="display">This load went<br /><em>missing.</em></h1>
+      <p class="page-sub">
+        The page you asked for is not here &mdash; it may have moved, or the
+        link may have been mistyped. Everything else is still where you left it.
+      </p>
+      <div class="nf-actions">
+        <a href="/" class="btn btn-red">Back to home <span class="arr">&rarr;</span></a>
+        <a href="/services" class="btn btn-ghost-ink">Services</a>
+        <a href="/contact" class="btn btn-ghost-ink">Get a quote</a>
+      </div>
+      <p class="data nf-note">
+        Chasing a consignment? Call operations on
+        <a class="link" href={contact.opsPhoneHref}>{contact.opsPhone}</a>
+      </p>
+    </div>
+  </header>
+
+  <div class="hazard" aria-hidden="true"></div>
+
+</Base>
+
+<style>
+  .nf { padding-bottom: clamp(4rem, 9vw, 7rem); }
+  .nf-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
+  .nf-note { margin-top: 2rem; }
+</style>

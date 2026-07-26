@@ -1,0 +1,457 @@
+---
+import Base from '../layouts/Base.astro';
+import { hubs, lanes, corridors, placeNames } from '../data/company';
+---
+<Base
+  title="Network · Depots, Lead Times & Cross-Border · Zanzi Logistics"
+  description="The Zanzi Logistics network: depots in Johannesburg, Cape Town and Durban, scheduled national linehaul with indicative lead times, SADC cross-border corridors, and international sea and air forwarding."
+  ref="ZL-03"
+  refName="Network"
+>
+
+  <header class="page-hero">
+    <div class="container hero-stack">
+      <div class="data-strip">
+        <span class="data"><strong>Ref ZL-03</strong> &middot; Network</span>
+        <span class="data">{hubs.length} depots &middot; 9 provinces &middot; {corridors.length} corridors</span>
+      </div>
+      <h1 class="display">Where we <em>run.</em></h1>
+      <p class="page-sub">
+        Scheduled linehaul between our own depots, delivery into any address in
+        South Africa, and overland routes into the SADC region. Everything below
+        is indicative &mdash; the transit times on your quote are the ones we
+        commit to.
+      </p>
+    </div>
+  </header>
+
+  <div class="hazard" aria-hidden="true"></div>
+
+  <!-- ═══ Depots ═══ -->
+  <section id="depots">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">A &middot; Depots</span></div>
+        <h2 class="display">Three <em>depots,</em><br />one operation.</h2>
+        <p class="sub">
+          Every load routes through a depot we run ourselves. Nothing sits in a
+          yard belonging to someone we have never met.
+        </p>
+      </div>
+
+      <div class="hub-grid rv-group">
+        {hubs.map((h) => (
+          <div class={`hub ${h.primary ? 'hub-hq' : ''}`}>
+            <div class="hub-top">
+              <span class="hub-code">{h.code}</span>
+              {h.primary && <span class="plate plate-fill">HQ</span>}
+            </div>
+            <h3>{h.city}</h3>
+            <p class="data hub-role">{h.role}</p>
+            <p class="hub-addr">{h.address}</p>
+            <p class="hub-note">{h.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Schematic ═══ -->
+  <section class="ink-section">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">B &middot; Route schematic</span></div>
+        <h2 class="display">The lines we <em>run</em> weekly.</h2>
+        <p class="sub">
+          Solid runs are scheduled domestic linehaul. Dashed runs cross a
+          border. This is a schematic of the network, not a map &mdash; it is
+          not to scale and it is not a route plan.
+        </p>
+      </div>
+
+      <figure class="schematic rv">
+        <svg viewBox="0 0 720 400" role="img" aria-labelledby="sch-title sch-desc">
+          <title id="sch-title">Zanzi Logistics route schematic</title>
+          <desc id="sch-desc">
+            A schematic diagram of the Zanzi Logistics network. Depots at
+            Johannesburg, Cape Town and Durban are linked by scheduled domestic
+            linehaul, which also serves Polokwane, Bloemfontein and Gqeberha.
+            Cross-border routes run from Johannesburg and Bloemfontein to the
+            Beitbridge, Lebombo, Skilpadshek and Nakop border posts. The full
+            detail is given in the tables on this page.
+          </desc>
+
+          <!-- domestic runs -->
+          <g class="s-dom">
+            <line x1="390" y1="140" x2="400" y2="70" pathLength="100" />
+            <line x1="390" y1="140" x2="500" y2="250" pathLength="100" />
+            <line x1="390" y1="140" x2="330" y2="235" pathLength="100" />
+            <line x1="330" y1="235" x2="120" y2="345" pathLength="100" />
+            <line x1="330" y1="235" x2="300" y2="340" pathLength="100" />
+            <line x1="500" y1="250" x2="300" y2="340" pathLength="100" />
+            <line x1="300" y1="340" x2="120" y2="345" pathLength="100" />
+          </g>
+
+          <!-- cross-border runs -->
+          <g class="s-xb">
+            <line x1="400" y1="70" x2="432" y2="26" pathLength="100" />
+            <line x1="390" y1="140" x2="262" y2="62" pathLength="100" />
+            <line x1="390" y1="140" x2="558" y2="106" pathLength="100" />
+            <line x1="330" y1="235" x2="72" y2="216" pathLength="100" />
+          </g>
+
+          <!-- border posts -->
+          <g class="s-border">
+            <circle cx="432" cy="26" r="5" />
+            <text x="444" y="24">Beitbridge &#183; ZWE</text>
+            <circle cx="262" cy="62" r="5" />
+            <text x="274" y="60">Skilpadshek &#183; BWA</text>
+            <circle cx="558" cy="106" r="5" />
+            <text x="570" y="104">Lebombo &#183; MOZ</text>
+            <circle cx="72" cy="216" r="5" />
+            <text x="84" y="214">Nakop &#183; NAM</text>
+          </g>
+
+          <!-- intermediate cities -->
+          <g class="s-city">
+            <rect x="396" y="66" width="8" height="8" />
+            <text x="410" y="66">Polokwane</text>
+            <rect x="326" y="231" width="8" height="8" />
+            <text x="340" y="231">Bloemfontein</text>
+            <rect x="296" y="336" width="8" height="8" />
+            <text x="310" y="336">Gqeberha</text>
+          </g>
+
+          <!-- depots -->
+          <g class="s-depot">
+            <rect x="383" y="133" width="14" height="14" />
+            <text x="405" y="136">JNB</text>
+            <text class="s-depot-sub" x="405" y="150">Johannesburg</text>
+
+            <rect x="493" y="243" width="14" height="14" />
+            <text x="515" y="246">DUR</text>
+            <text class="s-depot-sub" x="515" y="260">Durban</text>
+
+            <rect x="113" y="338" width="14" height="14" />
+            <text x="135" y="341">CPT</text>
+            <text class="s-depot-sub" x="135" y="355">Cape Town</text>
+          </g>
+
+          <!-- key -->
+          <g class="s-key">
+            <line class="s-key-dom" x1="24" y1="30" x2="60" y2="30" />
+            <text x="68" y="33">Domestic linehaul</text>
+            <line class="s-key-xb" x1="24" y1="52" x2="60" y2="52" />
+            <text x="68" y="55">Cross-border</text>
+          </g>
+        </svg>
+        <figcaption class="data">
+          fig. 02 &middot; network schematic, not to scale &middot; Zambia is served
+          via Beitbridge and Chirundu, under bond
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ═══ Lanes ═══ -->
+  <section id="lanes" class="dim">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">C &middot; Domestic lead times</span></div>
+        <h2 class="display">How long it <em>takes.</em></h2>
+        <p class="sub">
+          Transit time is counted from collection, in working days. Part loads
+          run longer than full loads because they wait for a full vehicle
+          &mdash; that is the trade you make for the lower rate.
+        </p>
+      </div>
+
+      <div class="table-scroll rv">
+        <table class="manifest">
+          <thead>
+            <tr>
+              <th scope="col">Lane</th>
+              <th scope="col">Route</th>
+              <th scope="col">Distance</th>
+              <th scope="col">Full load</th>
+              <th scope="col">Part load</th>
+            </tr>
+          </thead>
+          <tbody>
+            {lanes.map((l) => (
+              <tr>
+                <th scope="row">
+                  <span class="m-code">{l.from}</span> &rarr; <span class="m-code">{l.to}</span>
+                </th>
+                <td>{placeNames[l.from]} to {placeNames[l.to]}</td>
+                <td class="m-num">{l.km}</td>
+                <td class="m-num">{l.ftl}</td>
+                <td class="m-num">{l.ltl}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note rv">
+        Lanes not listed are quoted on request &mdash; we deliver into all nine
+        provinces, including farm and mine addresses off the main routes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ Corridors ═══ -->
+  <section id="corridors">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">D &middot; Cross-border corridors</span></div>
+        <h2 class="display">Cleared before<br />the <em>border.</em></h2>
+        <p class="sub">
+          Entries are lodged and duties settled while the vehicle is still
+          loading. A truck sitting at a border post is a truck you are paying
+          for twice.
+        </p>
+      </div>
+
+      <div class="table-scroll rv">
+        <table class="manifest">
+          <thead>
+            <tr>
+              <th scope="col">Destination</th>
+              <th scope="col">Border post</th>
+              <th scope="col">Transit</th>
+              <th scope="col">Service</th>
+            </tr>
+          </thead>
+          <tbody>
+            {corridors.map((c) => (
+              <tr>
+                <th scope="row">{c.country}</th>
+                <td class="m-code">{c.border}</td>
+                <td class="m-num">{c.transit}</td>
+                <td>{c.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p class="table-note rv">
+        Transit times assume the paperwork is complete and correct at
+        collection. Missing documents are the single biggest cause of delay on
+        every corridor above &mdash; we check yours before the truck moves.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══ International ═══ -->
+  <section id="international" class="dim">
+    <div class="container int-grid">
+      <div class="rv">
+        <div class="sec-ref"><span class="data">E &middot; International</span></div>
+        <h2 class="display">Beyond the <em>region.</em></h2>
+        <p class="int-lead">
+          Import and export beyond SADC is handled as freight forwarding: we
+          book the sea or air leg, clear it on arrival, and run the inland leg
+          on our own fleet. One company from the port to the door.
+        </p>
+      </div>
+
+      <div class="rv">
+        <ul class="int-list">
+          <li>
+            <span class="data data-red">Sea freight</span>
+            <p>Full container (FCL) and groupage (LCL) through Durban and Cape Town, with drayage and unpack included.</p>
+          </li>
+          <li>
+            <span class="data data-red">Air freight</span>
+            <p>Time-critical import and export through OR Tambo and Cape Town International, cleared and delivered onward.</p>
+          </li>
+          <li>
+            <span class="data data-red">Clearing &amp; forwarding</span>
+            <p>Entries lodged under our own customs code, duties and VAT calculated, and queries handled with the revenue authority directly.</p>
+          </li>
+          <li>
+            <span class="data data-red">Door to door</span>
+            <p>Quoted as one price from the supplier's floor to yours, with the inland leg on Zanzi vehicles rather than a subcontractor.</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="drench">
+    <div class="container rv-group">
+      <div class="data-strip cta-strip">
+        <span class="data">All nine provinces</span>
+        <span class="data">{corridors.length} SADC corridors</span>
+        <span class="data">Sea &amp; air forwarding</span>
+      </div>
+      <h2 class="display cta-title">Not on the <em>list?</em></h2>
+      <p class="cta-sub">
+        Off-route, cross-border or overseas &mdash; send us the origin and
+        destination and we will tell you honestly whether we are the right
+        carrier for it.
+      </p>
+      <div class="cta-actions">
+        <a href="/contact" class="btn btn-ink">Ask about a route <span class="arr">&rarr;</span></a>
+        <a href="/services" class="btn btn-ghost-red">See all services</a>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* ── Depots ── */
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .hub {
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+    padding: clamp(1.4rem, 3vw, 2rem);
+  }
+  .hub-hq { border-color: var(--red); border-width: 2px; }
+  .hub-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.1rem;
+  }
+  .hub-code {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 2.4rem;
+    line-height: 1;
+    letter-spacing: 0.04em;
+    color: var(--red);
+  }
+  .hub h3 { margin-bottom: 0.4rem; }
+  .hub-role { color: var(--red-deep); font-weight: 600; }
+  .hub-addr {
+    margin-top: 0.9rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink);
+  }
+  .hub-note {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--steel);
+  }
+  @media (max-width: 900px) { .hub-grid { grid-template-columns: 1fr; } }
+
+  /* ── Schematic ── */
+  .schematic svg { width: 100%; height: auto; }
+  .schematic figcaption { margin-top: 1rem; }
+
+  .s-dom line {
+    stroke: var(--paper-on-ink);
+    stroke-width: 2;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+  }
+  .s-xb line {
+    stroke: var(--red-bright);
+    stroke-width: 2;
+    stroke-dasharray: 6 5;
+  }
+  .js .rv .s-dom line { transition: stroke-dashoffset 1s var(--ease-haul) 0.2s; }
+  .js .rv.in .s-dom line { stroke-dashoffset: 0; }
+  .js .rv .s-xb line, .js .rv .s-border, .js .rv .s-city, .js .rv .s-depot, .js .rv .s-key {
+    opacity: 0;
+    transition: opacity 0.5s var(--ease-haul) 0.7s;
+  }
+  .js .rv.in .s-xb line, .js .rv.in .s-border, .js .rv.in .s-city,
+  .js .rv.in .s-depot, .js .rv.in .s-key { opacity: 1; }
+  /* without JS the dash offset would leave the domestic runs invisible */
+  html:not(.js) .s-dom line { stroke-dashoffset: 0; }
+
+  .s-border circle { fill: var(--red-bright); }
+  .s-border text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    fill: var(--red-bright);
+  }
+  .s-city rect { fill: var(--mist-on-ink); }
+  .s-city text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    fill: var(--mist-on-ink);
+  }
+  .s-depot rect { fill: var(--red); }
+  .s-depot text {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    fill: var(--paper-on-ink);
+  }
+  .s-depot .s-depot-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 400;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    fill: var(--mist-on-ink);
+  }
+  .s-key text {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    fill: var(--mist-on-ink);
+  }
+  .s-key-dom { stroke: var(--paper-on-ink); stroke-width: 2; }
+  .s-key-xb { stroke: var(--red-bright); stroke-width: 2; stroke-dasharray: 6 5; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .s-dom line { stroke-dashoffset: 0; }
+  }
+
+  /* ── Tables ── */
+  .table-note {
+    margin-top: 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    color: var(--steel);
+    max-width: 62ch;
+  }
+
+  /* ── International ── */
+  .int-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
+  }
+  .int-lead {
+    margin-top: 1.4rem;
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: var(--steel);
+  }
+  .int-list { list-style: none; border-top: 2px solid var(--red); }
+  .int-list li { padding: 1.2rem 0; border-bottom: 1px solid var(--rule); }
+  .int-list p { margin-top: 0.5rem; font-size: 0.94rem; line-height: 1.7; color: var(--steel); }
+  @media (max-width: 900px) { .int-grid { grid-template-columns: 1fr; } }
+
+  /* ── CTA ── */
+  .cta-title {
+    margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-size: clamp(2.5rem, 7vw, 5.2rem);
+  }
+  .cta-sub { margin-top: 1.2rem; font-size: 1.04rem; line-height: 1.75; max-width: 48ch; }
+  .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
+</style>

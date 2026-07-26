@@ -1,0 +1,578 @@
+---
+import Base from '../layouts/Base.astro';
+import { divisions, cycle, lanes, corridors, stats, commitments, placeNames } from '../data/company';
+
+// The home page shows the first four lanes; /network carries the full table.
+const featuredLanes = lanes.slice(0, 4);
+const featuredCorridors = corridors.slice(0, 3);
+---
+<Base
+  title="Zanzi Logistics · Road Freight, Warehousing & Cross-Border"
+  description="Zanzi Logistics moves road freight, warehousing and cross-border cargo across South Africa and into SADC. FTL and LTL, 3PL warehousing and distribution, customs clearing and international forwarding."
+  ref="ZL-01"
+  refName="Home"
+>
+
+  <!-- ═══ Hero ═══ -->
+  <header class="hero">
+    <div class="container hero-stack">
+      <div class="data-strip">
+        <span class="data"><strong>Ref ZL-01</strong> &middot; Home</span>
+        <span class="data">Road freight &middot; 3PL &middot; Cross-border</span>
+        <span class="data">South Africa &middot; SADC &middot; International</span>
+      </div>
+
+      <h1 class="display">
+        Freight moved<br />on <em>schedule.</em>
+      </h1>
+
+      <div class="hero-row">
+        <div class="hero-copy">
+          <p class="hero-sub">
+            Zanzi Logistics runs road freight, third-party warehousing and
+            cross-border cargo out of Johannesburg, Cape Town and Durban. Full
+            loads, part loads, stock held and distributed, and consignments
+            cleared through the border by our own people.
+          </p>
+          <div class="hero-actions">
+            <a href="/contact" class="btn btn-red">Get a quote <span class="arr">&rarr;</span></a>
+            <a href="/services" class="btn btn-ghost">What we move</a>
+          </div>
+          <div class="hero-route">
+            <div class="route">
+              <span class="rt-node" aria-hidden="true"></span>
+              <span>Collected</span>
+              <span class="rt-line" aria-hidden="true"></span>
+              <span>Delivered</span>
+              <span class="rt-node" aria-hidden="true"></span>
+            </div>
+            <p class="data">One controller &middot; one waybill &middot; one number to call</p>
+          </div>
+        </div>
+
+        <figure class="hero-fig" aria-hidden="true">
+          <svg viewBox="0 0 320 248" class="note">
+            <!-- the sheet -->
+            <rect class="n-sheet" x="8" y="6" width="304" height="234" pathLength="100" />
+
+            <!-- header band -->
+            <rect class="n-band" x="8" y="6" width="304" height="26" />
+            <text class="n-band-t" x="20" y="23">Consignment note</text>
+            <text class="n-band-r" x="300" y="23" text-anchor="end">ZL-00418</text>
+
+            <!-- route -->
+            <text class="n-lbl" x="20" y="52">Origin</text>
+            <text class="n-lbl" x="300" y="52" text-anchor="end">Destination</text>
+            <rect class="n-node" x="20" y="60" width="8" height="8" />
+            <line class="n-route" x1="28" y1="64" x2="292" y2="64" pathLength="100" />
+            <rect class="n-node" x="292" y="60" width="8" height="8" />
+            <text class="n-val" x="20" y="86">JNB</text>
+            <text class="n-val" x="300" y="86" text-anchor="end">CPT</text>
+            <text class="n-mid" x="160" y="86" text-anchor="middle">1 400 km &#183; 2 days</text>
+
+            <!-- cell grid -->
+            <line class="n-rule" x1="8" y1="100" x2="312" y2="100" />
+            <line class="n-rule" x1="8" y1="142" x2="312" y2="142" />
+            <line class="n-rule" x1="160" y1="100" x2="160" y2="184" />
+            <line class="n-rule" x1="8" y1="184" x2="312" y2="184" />
+
+            <text class="n-lbl" x="20" y="116">Consignor</text>
+            <text class="n-val-s" x="20" y="132">Zanzi Logistics</text>
+            <text class="n-lbl" x="172" y="116">Service</text>
+            <text class="n-val-s" x="172" y="132">FTL &#183; direct</text>
+            <text class="n-lbl" x="20" y="158">Mass</text>
+            <text class="n-val-s" x="20" y="174">12 400 kg</text>
+            <text class="n-lbl" x="172" y="158">Pallets</text>
+            <text class="n-val-s" x="172" y="174">24</text>
+
+            <!-- stamp + signature -->
+            <rect class="n-stamp" x="20" y="196" width="92" height="26" />
+            <text class="n-stamp-t" x="66" y="213" text-anchor="middle">Booked</text>
+            <line class="n-sign" x1="140" y1="216" x2="300" y2="216" />
+            <text class="n-lbl" x="140" y="230">Signed on collection</text>
+
+            <!-- red foot -->
+            <rect class="n-foot" x="8" y="234" width="304" height="6" />
+          </svg>
+          <figcaption class="data">fig. 01 &middot; consignment note, booked</figcaption>
+        </figure>
+      </div>
+    </div>
+  </header>
+
+  <div class="hazard" aria-hidden="true"></div>
+
+  <!-- ═══ Capability strip ═══ -->
+  <section class="tight dim">
+    <div class="container stat-row rv-group">
+      {stats.map((s) => (
+        <div class="stat">
+          <span class="stat-v">{s.value}</span>
+          <span class="data">{s.label}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- ═══ § A — Divisions ═══ -->
+  <section>
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">A &middot; What we move</span></div>
+        <h2 class="display">Three <em>divisions,</em><br />one waybill.</h2>
+        <p class="sub">
+          Most freight jobs are not just a truck. They are a truck, a warehouse
+          and a border post. We run all three ourselves, so nothing is handed to
+          a third party the moment it gets complicated.
+        </p>
+      </div>
+
+      <div class="div-grid rv-group">
+        {divisions.map((d) => (
+          <a href={`/services#${d.slug}`} class="div-card">
+            <span class="div-code plate">{d.code}</span>
+            <h3>{d.name}</h3>
+            <p>{d.blurb}</p>
+            <ul class="div-list">
+              {d.services.slice(0, 4).map((s) => <li>{s.name}</li>)}
+            </ul>
+            <span class="div-more data data-red">
+              {d.services.length} services <span class="arr">&rarr;</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ § B — The operating cycle (black) ═══ -->
+  <section class="ink-section">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">B &middot; How a load moves</span></div>
+        <h2 class="display">Booked. Collected.<br />Routed. <em>Delivered.</em></h2>
+        <p class="sub">
+          Every consignment runs the same four steps, whether it is one pallet
+          to Polokwane or a full trailer to Lusaka. You are told what is
+          happening at each one.
+        </p>
+      </div>
+
+      <div class="cycle rv-group">
+        {cycle.map((c) => (
+          <div class="cyc">
+            <span class="data cyc-step">{c.step}</span>
+            <h3>{c.name}</h3>
+            <p>{c.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ § C — Network ═══ -->
+  <section class="dim">
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">C &middot; The network</span></div>
+        <h2 class="display">Nine provinces,<br />five <em>corridors.</em></h2>
+        <p class="sub">
+          Scheduled linehaul between our own depots, delivery into any address
+          in the country, and overland routes into the SADC region. Transit
+          times below are indicative &mdash; your quote carries the real ones.
+        </p>
+      </div>
+
+      <div class="net-cols">
+        <div class="rv">
+          <p class="data net-head">Domestic linehaul</p>
+          <div class="table-scroll">
+            <table class="manifest net-table">
+              <thead>
+                <tr>
+                  <th scope="col">Lane</th>
+                  <th scope="col">Distance</th>
+                  <th scope="col">FTL</th>
+                  <th scope="col">Part load</th>
+                </tr>
+              </thead>
+              <tbody>
+                {featuredLanes.map((l) => (
+                  <tr>
+                    <th scope="row">
+                      <span class="m-code">{l.from}</span> &rarr; <span class="m-code">{l.to}</span>
+                      <span class="lane-names">{placeNames[l.from]} to {placeNames[l.to]}</span>
+                    </th>
+                    <td class="m-num">{l.km}</td>
+                    <td class="m-num">{l.ftl}</td>
+                    <td class="m-num">{l.ltl}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="rv">
+          <p class="data net-head">Cross-border</p>
+          <ul class="corr-list">
+            {featuredCorridors.map((c) => (
+              <li class="corr">
+                <span class="corr-country">{c.country}</span>
+                <span class="corr-via data">via {c.border}</span>
+                <span class="corr-transit data">{c.transit}</span>
+              </li>
+            ))}
+          </ul>
+          <p class="net-note">
+            Sea and air freight forwarding for import and export is handled by
+            the same team, with the inland leg on our own fleet.
+          </p>
+          <a href="/network" class="btn btn-ghost net-btn">Full network <span class="arr">&rarr;</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ § D — Commitments ═══ -->
+  <section>
+    <div class="container">
+      <div class="sec-head rv">
+        <div class="sec-ref"><span class="data">D &middot; How we operate</span></div>
+        <h2 class="display">Four things we<br /><em>will not</em> get wrong.</h2>
+      </div>
+
+      <div class="commit-grid rv-group">
+        {commitments.map((c) => (
+          <div class="commit">
+            <span class="data commit-ref">{c.ref}</span>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="drench">
+    <div class="container rv-group">
+      <div class="data-strip cta-strip">
+        <span class="data">Quotes in writing</span>
+        <span class="data">Surcharges spelled out</span>
+        <span class="data">No booking fee</span>
+      </div>
+      <h2 class="display cta-title">What are you<br /><em>moving?</em></h2>
+      <p class="cta-sub">
+        Tell us what it is, where it is and where it needs to be. You get a
+        written rate and a collection window &mdash; not a callback next week.
+      </p>
+      <div class="cta-actions">
+        <a href="/contact" class="btn btn-ink">Get a quote <span class="arr">&rarr;</span></a>
+        <a href="/services" class="btn btn-ghost-red">See all services</a>
+      </div>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* ── Hero ── */
+  .hero { padding: clamp(2.75rem, 6vw, 4.5rem) 0 clamp(3rem, 6vw, 4.5rem); }
+  .hero h1 { margin-top: clamp(1.5rem, 3.5vw, 2.4rem); }
+
+  .hero-row {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    align-items: end;
+    margin-top: clamp(2rem, 4.5vw, 3.2rem);
+  }
+  .hero-sub {
+    font-size: 1.06rem;
+    line-height: 1.8;
+    color: var(--steel);
+    max-width: 52ch;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2rem; }
+  .hero-route {
+    margin-top: 2.2rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+    max-width: 30rem;
+  }
+  .hero-route .data { margin-top: 0.8rem; }
+
+  .hero-fig { max-width: 420px; justify-self: end; width: 100%; }
+  .hero-fig figcaption { margin-top: 0.7rem; text-align: right; }
+  .note { width: 100%; height: auto; }
+
+  /* the note fills itself in: sheet → band → route → cells → stamp */
+  .n-sheet {
+    fill: var(--paper-raised);
+    stroke: var(--ink);
+    stroke-width: 1.6;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawIn 1.1s var(--ease-haul) 0.25s forwards;
+  }
+  @keyframes drawIn { to { stroke-dashoffset: 0; } }
+  @keyframes noteFade { from { opacity: 0; } to { opacity: 1; } }
+
+  .n-band { fill: var(--ink); }
+  .n-band-t { fill: var(--paper-on-ink); }
+  .n-band-r { fill: var(--red-bright); }
+  .n-band-t, .n-band-r {
+    font-family: var(--font-mono);
+    font-size: 8.5px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .n-band, .n-band-t, .n-band-r {
+    opacity: 0;
+    animation: noteFade 0.4s var(--ease-haul) 0.85s forwards;
+  }
+
+  .n-lbl {
+    font-family: var(--font-mono);
+    font-size: 6px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    fill: var(--steel);
+  }
+  .n-val {
+    font-family: var(--font-display);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    fill: var(--ink);
+  }
+  .n-val-s {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    fill: var(--ink);
+  }
+  .n-mid {
+    font-family: var(--font-mono);
+    font-size: 7px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    fill: var(--red-deep);
+  }
+  .n-node { fill: var(--red); }
+  .n-route {
+    stroke: var(--ink);
+    stroke-width: 2;
+    stroke-dasharray: 100;
+    stroke-dashoffset: 100;
+    animation: drawIn 0.8s var(--ease-haul) 1.05s forwards;
+  }
+  .n-node, .n-val, .n-mid {
+    opacity: 0;
+    animation: noteFade 0.4s var(--ease-haul) 1.35s forwards;
+  }
+  .n-rule { stroke: var(--rule); stroke-width: 1; }
+  .n-sign { stroke: var(--rule-strong); stroke-width: 1; }
+  .n-rule, .n-sign, .n-val-s, .n-lbl {
+    opacity: 0;
+    animation: noteFade 0.45s var(--ease-haul) 1.55s forwards;
+  }
+  .n-stamp { fill: none; stroke: var(--red); stroke-width: 2; }
+  .n-stamp-t {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    fill: var(--red);
+  }
+  .n-stamp, .n-stamp-t {
+    animation: stampIn 0.35s var(--ease-haul) 1.9s backwards;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @keyframes stampIn { from { opacity: 0; transform: scale(1.3) rotate(-6deg); } }
+  .n-foot { fill: var(--red); opacity: 0; animation: noteFade 0.4s var(--ease-haul) 2.1s forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .n-sheet, .n-route { animation: none; stroke-dashoffset: 0; }
+    .n-band, .n-band-t, .n-band-r, .n-node, .n-val, .n-mid, .n-rule,
+    .n-sign, .n-val-s, .n-lbl, .n-stamp, .n-stamp-t, .n-foot {
+      animation: none;
+      opacity: 1;
+    }
+  }
+  @media (max-width: 900px) {
+    .hero-row { grid-template-columns: 1fr; align-items: start; }
+    .hero-fig { justify-self: start; max-width: 400px; }
+    .hero-fig figcaption { text-align: left; }
+  }
+
+  /* ── Stat strip ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem 2rem;
+  }
+  .stat { border-left: 3px solid var(--red); padding-left: 1rem; }
+  .stat-v {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.9rem, 4vw, 2.8rem);
+    line-height: 1;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.5rem;
+  }
+  @media (max-width: 760px) { .stat-row { grid-template-columns: 1fr 1fr; } }
+
+  /* ── Divisions ── */
+  .div-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 2rem);
+  }
+  .div-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--rule-strong);
+    background: var(--paper-raised);
+    padding: clamp(1.5rem, 3vw, 2rem);
+    transition: border-color 0.18s, background 0.18s;
+  }
+  .div-card:hover { border-color: var(--red); }
+  .div-code { align-self: flex-start; margin-bottom: 1.4rem; }
+  .div-card h3 { margin-bottom: 0.8rem; }
+  .div-card > p { font-size: 0.94rem; line-height: 1.7; color: var(--steel); }
+  .div-list {
+    list-style: none;
+    margin: 1.4rem 0;
+    padding-top: 1.2rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .div-list li {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.03em;
+    color: var(--ink);
+    padding-left: 1rem;
+    position: relative;
+  }
+  .div-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 5px;
+    height: 5px;
+    background: var(--red);
+  }
+  .div-more { margin-top: auto; font-weight: 600; }
+  .div-more .arr { display: inline-block; transition: transform 0.18s var(--ease-haul); }
+  .div-card:hover .div-more .arr { transform: translateX(4px); }
+  @media (max-width: 940px) { .div-grid { grid-template-columns: 1fr; } }
+
+  /* ── Cycle ── */
+  .cycle {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+  .cyc { border-top: 2px solid var(--rule-on-ink-strong); padding-top: 1.4rem; position: relative; }
+  .cyc::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: 34px;
+    height: 2px;
+    background: var(--red);
+  }
+  .cyc-step { color: var(--red-bright); font-weight: 600; }
+  .cyc h3 { margin: 0.6rem 0 0.7rem; }
+  .cyc p { font-size: 0.92rem; line-height: 1.7; color: var(--mist-on-ink); }
+  @media (max-width: 940px) { .cycle { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .cycle { grid-template-columns: 1fr; } }
+
+  /* ── Network ── */
+  .net-cols {
+    display: grid;
+    grid-template-columns: 1.35fr 0.65fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  /* grid children default to min-width:auto, which would let the lane
+     table's min-width push the whole page wider than the viewport
+     instead of scrolling inside .table-scroll */
+  .net-cols > * { min-width: 0; }
+  .net-head { color: var(--red-deep); font-weight: 600; margin-bottom: 1rem; }
+  .net-table { min-width: 460px; }
+  .lane-names {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--steel);
+    margin-top: 0.25rem;
+  }
+  .corr-list { list-style: none; border-top: 2px solid var(--red); }
+  .corr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.2rem 1rem;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .corr-country { font-weight: 500; font-size: 0.98rem; }
+  .corr-via { grid-column: 1; }
+  .corr-transit {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    color: var(--ink);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .net-note {
+    margin-top: 1.4rem;
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--steel);
+  }
+  .net-btn { margin-top: 1.6rem; }
+  @media (max-width: 940px) { .net-cols { grid-template-columns: 1fr; } }
+
+  /* ── Commitments ── */
+  .commit-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 4vw, 4rem);
+  }
+  .commit { border-top: 1px solid var(--rule-strong); padding-top: 1.3rem; }
+  .commit-ref { color: var(--red-deep); font-weight: 600; }
+  .commit h3 { margin: 0.5rem 0 0.7rem; }
+  .commit p { font-size: 0.94rem; line-height: 1.75; color: var(--steel); }
+  @media (max-width: 760px) { .commit-grid { grid-template-columns: 1fr; } }
+
+  /* ── CTA ── */
+  .cta-title {
+    margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
+    font-size: clamp(2.5rem, 7vw, 5.2rem);
+  }
+  .cta-sub {
+    margin-top: 1.2rem;
+    font-size: 1.04rem;
+    line-height: 1.75;
+    max-width: 48ch;
+  }
+  .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
+</style>

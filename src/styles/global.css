@@ -1,0 +1,763 @@
+/* ════════════════════════════════════════════════════════════
+   Zanzi Logistics
+   Design language: "Freight Manifest" — the paperwork that
+   travels with the load. Consignment notes, stencilled crate
+   marks, hazard tape, route diagrams. Red and black only.
+   Oswald (display) / IBM Plex Sans (body) / IBM Plex Mono (data).
+   Full rationale in DESIGN.md.
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Tokens ── */
+:root {
+  /* paper */
+  --paper: #f2f1ef;
+  --paper-raised: #fafaf9;
+  --paper-dim: #e4e3e0;
+
+  /* black */
+  --ink: #121212;
+  --ink-soft: #1c1c1c;
+  --ink-line: #2e2e2e;
+
+  /* muted text on paper */
+  --steel: #56555a;
+
+  /* the brand red */
+  --red: #d6202b;
+  --red-deep: #a30f18;
+  --red-bright: #ff4d55;
+  --on-red: #fff6f6;
+
+  /* text on black */
+  --paper-on-ink: #ededeb;
+  --mist-on-ink: #a3a2a0;
+
+  /* hairlines */
+  --rule: rgba(18, 18, 18, 0.18);
+  --rule-faint: rgba(18, 18, 18, 0.1);
+  --rule-strong: rgba(18, 18, 18, 0.42);
+  --rule-on-ink: rgba(237, 237, 235, 0.16);
+  --rule-on-ink-strong: rgba(237, 237, 235, 0.34);
+
+  /* type */
+  --font-display: 'Oswald Variable', 'Arial Narrow', Impact, sans-serif;
+  --font-sans: 'IBM Plex Sans Variable', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
+
+  --max-w: 1280px;
+  --gutter: clamp(1.25rem, 4vw, 2.5rem);
+  --nav-h: 70px;
+
+  --ease-haul: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* perceptual refinement where OKLCH is supported */
+@supports (color: oklch(50% 0.1 100)) {
+  :root {
+    --paper: oklch(95.5% 0.002 90);
+    --paper-raised: oklch(98.2% 0.001 90);
+    --paper-dim: oklch(91% 0.003 90);
+    --ink: oklch(17.5% 0 0);
+    --ink-soft: oklch(21% 0 0);
+    --ink-line: oklch(27.5% 0 0);
+    --steel: oklch(45.5% 0.008 300);
+    --red: oklch(54% 0.212 27);
+    --red-deep: oklch(42% 0.185 28);
+    --red-bright: oklch(66% 0.203 24);
+    --on-red: oklch(97.5% 0.008 20);
+    --paper-on-ink: oklch(93.5% 0.002 90);
+    --mist-on-ink: oklch(70% 0.002 90);
+  }
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-font-smoothing: antialiased; scroll-behavior: smooth; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+img, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; }
+::selection { background: var(--red); color: var(--on-red); }
+
+/* visible focus, everywhere */
+:focus-visible {
+  outline: 2px solid var(--red-deep);
+  outline-offset: 2px;
+}
+.ink-section :focus-visible, .site-nav :focus-visible, footer :focus-visible {
+  outline-color: var(--red-bright);
+}
+
+/* cross-document page transitions (progressive) */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
+/* ── Skip link ── */
+.skip-link {
+  position: absolute;
+  left: var(--gutter);
+  top: -100%;
+  z-index: 300;
+  background: var(--red);
+  color: var(--on-red);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.7rem 1.1rem;
+  transition: top 0.15s var(--ease-haul);
+}
+.skip-link:focus-visible { top: 0.5rem; }
+
+/* ── Layout primitives ── */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  position: relative;
+  z-index: 1;
+}
+main { position: relative; z-index: 1; }
+
+section { padding: clamp(3.75rem, 8.5vw, 7rem) 0; position: relative; }
+section.tight { padding: clamp(2.25rem, 4.5vw, 3.5rem) 0; }
+section.dim { background: var(--paper-dim); }
+section.ink-section {
+  background: var(--ink);
+  color: var(--paper-on-ink);
+}
+section.drench {
+  background: var(--red);
+  color: var(--on-red);
+}
+
+/* ── Hazard tape ──
+   The signature divider: 45° red/black stripes. Decorative only,
+   always aria-hidden by the markup that uses it. */
+.hazard {
+  height: 8px;
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--red) 0 10px,
+    var(--ink) 10px 20px
+  );
+}
+.hazard-thin { height: 4px; }
+/* on black sections the black stripe would vanish, so invert to paper */
+.ink-section .hazard, footer .hazard, .site-nav .hazard {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    var(--red) 0 10px,
+    var(--ink-line) 10px 20px
+  );
+}
+
+/* ── Typography ── */
+.display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 0.92;
+  text-wrap: balance;
+}
+.display em {
+  font-style: normal;
+  color: var(--red);
+}
+.ink-section .display em { color: var(--red-bright); }
+/* on a red band the emphasis goes black — the only other brand colour.
+   3.7:1 against --red, which clears AA for display-size text. */
+.drench .display em { color: var(--ink); }
+
+h1.display { font-size: clamp(2.9rem, 8vw, 7rem); }
+h2.display { font-size: clamp(2rem, 4.8vw, 3.5rem); }
+h3 { font-weight: 600; font-size: 1.3rem; line-height: 1.3; letter-spacing: -0.005em; }
+
+p { max-width: 66ch; }
+
+/* data — the mono manifest voice */
+.data {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.data strong { font-weight: 600; color: var(--ink); }
+.ink-section .data { color: var(--mist-on-ink); }
+.ink-section .data strong { color: var(--paper-on-ink); }
+.drench .data { color: var(--on-red); }
+.data-red { color: var(--red-deep); }
+.ink-section .data-red { color: var(--red-bright); }
+
+/* data strip: spaced row of mono labels over a hairline */
+.data-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 2.2rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--rule);
+}
+.ink-section .data-strip, .drench .data-strip { border-bottom-color: var(--rule-on-ink); }
+.drench .data-strip { border-bottom-color: rgba(18, 18, 18, 0.35); }
+
+/* section heading: reference code + rule running to the edge */
+.sec-head { margin-bottom: clamp(2.2rem, 5vw, 3.6rem); }
+.sec-ref {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.sec-ref .data { white-space: nowrap; color: var(--red-deep); font-weight: 600; }
+.ink-section .sec-ref .data { color: var(--red-bright); }
+.drench .sec-ref .data { color: var(--on-red); }
+.sec-ref::after {
+  content: '';
+  height: 2px;
+  flex: 1;
+  background: var(--red);
+}
+/* the reference rule runs out to the edge as the section reveals */
+.js .rv .sec-ref::after {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.9s var(--ease-haul) 0.1s;
+}
+.js .rv.in .sec-ref::after { transform: scaleX(1); }
+.drench .sec-ref::after { background: var(--on-red); }
+
+.sec-head .sub {
+  margin-top: 1.2rem;
+  font-size: 1.02rem;
+  line-height: 1.75;
+  color: var(--steel);
+  max-width: 60ch;
+}
+.ink-section .sec-head .sub { color: var(--mist-on-ink); }
+.drench .sec-head .sub { color: var(--on-red); }
+
+/* body links */
+.link {
+  color: var(--red-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  font-weight: 500;
+}
+.link:hover { text-decoration-thickness: 2px; }
+.ink-section .link, footer .link { color: var(--red-bright); }
+
+/* ── The Z-route mark ──
+   The logo Z drawn as a route: two runs and a diagonal, with a
+   node at origin and at destination. */
+.zmark { width: 30px; height: 30px; flex-shrink: 0; }
+.zmark .zm-plate { fill: var(--red); }
+.zmark .zm-z {
+  fill: none;
+  stroke: var(--on-red);
+  stroke-width: 2.6;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+.zmark .zm-node { fill: var(--on-red); }
+
+/* ── Stencil plates ──
+   A bordered mono block, like the ID plate on a container. */
+.plate {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.32rem 0.7rem;
+  border: 2px solid currentColor;
+  color: var(--red-deep);
+  white-space: nowrap;
+}
+.plate-fill {
+  background: var(--red);
+  border-color: var(--red);
+  color: var(--on-red);
+}
+.plate-muted { color: var(--steel); }
+.ink-section .plate { color: var(--red-bright); }
+.ink-section .plate-muted { color: var(--mist-on-ink); }
+.ink-section .plate-fill { color: var(--on-red); }
+
+/* ── Route line ──
+   A rule with square nodes and mono place labels, measuring a real
+   corridor. Used inline in copy blocks and section heads. */
+.route {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.route .rt-node {
+  width: 9px;
+  height: 9px;
+  background: var(--red);
+  flex-shrink: 0;
+}
+.route .rt-line {
+  flex: 1;
+  height: 2px;
+  background: var(--rule-strong);
+  min-width: 24px;
+  position: relative;
+}
+.js .rv .route .rt-line, .js .rv-group .route .rt-line {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.7s var(--ease-haul) 0.15s;
+}
+.js .rv.in .route .rt-line, .js .rv-group.in .route .rt-line { transform: scaleX(1); }
+.ink-section .route { color: var(--paper-on-ink); }
+.ink-section .route .rt-line { background: var(--rule-on-ink-strong); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 1rem 1.6rem;
+  border: 2px solid transparent;
+  border-radius: 0;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+}
+.btn .arr { transition: transform 0.18s var(--ease-haul); }
+.btn:hover .arr { transform: translateX(4px); }
+
+.btn-red { background: var(--red); color: var(--on-red); border-color: var(--red); }
+.btn-red:hover { background: var(--red-deep); border-color: var(--red-deep); }
+
+.btn-ink { background: var(--ink); color: var(--paper-on-ink); border-color: var(--ink); }
+.btn-ink:hover { background: var(--ink-soft); }
+
+.btn-ghost { border-color: var(--rule-strong); color: var(--ink); background: transparent; }
+.btn-ghost:hover { border-color: var(--ink); background: var(--paper-raised); }
+
+.btn-ghost-ink { border-color: var(--rule-on-ink-strong); color: var(--paper-on-ink); background: transparent; }
+.btn-ghost-ink:hover { border-color: var(--paper-on-ink); background: var(--ink-soft); }
+
+.btn-ghost-red { border-color: rgba(18, 18, 18, 0.45); color: var(--on-red); background: transparent; }
+.btn-ghost-red:hover { border-color: var(--on-red); }
+
+/* ── Manifest table ──
+   Hairline-ruled, mono headers, a red rule under the header row.
+   Services and lead times are tables here, not card grids. */
+.table-scroll { overflow-x: auto; }
+.manifest {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+}
+.manifest th, .manifest td {
+  text-align: left;
+  vertical-align: top;
+  padding: 1rem 1.2rem;
+  border-bottom: 1px solid var(--rule);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+.manifest thead th {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 2px solid var(--red);
+  padding-bottom: 0.85rem;
+}
+.manifest tbody td { color: var(--steel); }
+.manifest tbody th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+.manifest tbody tr:hover td, .manifest tbody tr:hover th { background: var(--paper-raised); }
+.manifest .m-code { color: var(--red-deep); }
+.manifest .m-num { font-family: var(--font-mono); font-size: 0.76rem; white-space: nowrap; color: var(--ink); }
+
+.ink-section .manifest th, .ink-section .manifest td { border-bottom-color: var(--rule-on-ink); }
+.ink-section .manifest thead th { color: var(--paper-on-ink); }
+.ink-section .manifest tbody td { color: var(--mist-on-ink); }
+.ink-section .manifest tbody th { color: var(--paper-on-ink); }
+.ink-section .manifest tbody tr:hover td, .ink-section .manifest tbody tr:hover th { background: var(--ink-soft); }
+.ink-section .manifest .m-code { color: var(--red-bright); }
+.ink-section .manifest .m-num { color: var(--paper-on-ink); }
+
+/* ── Nav ── */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper-on-ink);
+}
+.nav-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  height: var(--nav-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+.wordmark { display: inline-flex; align-items: center; gap: 0.75rem; }
+.wordmark .wm-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+.wordmark .wm-sub {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 400;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--mist-on-ink);
+  display: block;
+  margin-top: 0.18rem;
+}
+.wordmark .wm-stack { display: block; }
+
+.nav-links { display: flex; align-items: center; gap: 1.8rem; }
+.nav-links a {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--mist-on-ink);
+  transition: color 0.15s;
+  position: relative;
+}
+.nav-links a:hover { color: var(--paper-on-ink); }
+.nav-links a.active { color: var(--paper-on-ink); }
+.nav-links a.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  bottom: -8px;
+  height: 2px;
+  background: var(--red);
+}
+.nav-links .nav-cta {
+  background: var(--red);
+  color: var(--on-red);
+  font-weight: 600;
+  padding: 0.62rem 1.1rem;
+  transition: background 0.15s;
+}
+.nav-links .nav-cta:hover { background: var(--red-deep); color: var(--on-red); }
+.nav-links .nav-cta.active::after { display: none; }
+
+/* mobile nav */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  width: 42px; height: 42px;
+  position: relative;
+}
+.nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {
+  content: '';
+  position: absolute;
+  left: 9px;
+  width: 24px; height: 2px;
+  background: var(--paper-on-ink);
+  transition: transform 0.22s var(--ease-haul), opacity 0.15s;
+}
+.nav-toggle span { top: 20px; }
+.nav-toggle span::before { left: 0; top: -7px; }
+.nav-toggle span::after { left: 0; top: 7px; }
+.nav-open .nav-toggle span { background: transparent; }
+.nav-open .nav-toggle span::before { transform: translateY(7px) rotate(45deg); }
+.nav-open .nav-toggle span::after { transform: translateY(-7px) rotate(-45deg); }
+
+@media (max-width: 940px) {
+  .nav-toggle { display: block; }
+  .nav-links {
+    position: fixed;
+    top: calc(var(--nav-h) + 4px); left: 0; right: 0;
+    background: var(--ink);
+    border-bottom: 2px solid var(--red);
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    padding: 0.5rem 0 1.4rem;
+    display: none;
+  }
+  .nav-open .nav-links { display: flex; }
+  .nav-links a {
+    padding: 1rem var(--gutter);
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--rule-on-ink);
+  }
+  .nav-links a.active::after { display: none; }
+  .nav-links .nav-cta {
+    margin: 1rem var(--gutter) 0;
+    text-align: center;
+    justify-content: center;
+    display: inline-flex;
+    border-bottom: none;
+  }
+}
+
+/* ── Reveal on scroll ──
+   Freight moves along a line, so reveals translate on X. Hidden
+   states are gated on html.js (set by the layout script) so content
+   stays fully visible without JavaScript; no inline <style> fallback
+   is possible under the strict CSP. */
+.js .rv {
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: opacity 0.5s var(--ease-haul), transform 0.5s var(--ease-haul);
+}
+.js .rv.in { opacity: 1; transform: none; }
+
+/* staggered groups: children reveal in sequence once .in lands */
+.js .rv-group > * {
+  opacity: 0;
+  transform: translateX(-18px);
+  transition: opacity 0.5s var(--ease-haul), transform 0.5s var(--ease-haul);
+}
+.js .rv-group.in > * { opacity: 1; transform: none; }
+.js .rv-group.in > :nth-child(2) { transition-delay: 70ms; }
+.js .rv-group.in > :nth-child(3) { transition-delay: 140ms; }
+.js .rv-group.in > :nth-child(4) { transition-delay: 210ms; }
+.js .rv-group.in > :nth-child(5) { transition-delay: 280ms; }
+.js .rv-group.in > :nth-child(6) { transition-delay: 350ms; }
+.js .rv-group.in > :nth-child(n+7) { transition-delay: 420ms; }
+
+/* hero load-in (no scroll needed) */
+.hero-stack > * {
+  opacity: 0;
+  transform: translateX(-20px);
+  animation: haulIn 0.7s var(--ease-haul) forwards;
+}
+.hero-stack > :nth-child(1) { animation-delay: 0.05s; }
+.hero-stack > :nth-child(2) { animation-delay: 0.14s; }
+.hero-stack > :nth-child(3) { animation-delay: 0.23s; }
+.hero-stack > :nth-child(4) { animation-delay: 0.32s; }
+.hero-stack > :nth-child(5) { animation-delay: 0.41s; }
+.hero-stack > :nth-child(n+6) { animation-delay: 0.5s; }
+@keyframes haulIn { to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .rv, .js .rv-group > *, .hero-stack > * {
+    opacity: 1; transform: none; transition: none; animation: none;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}
+
+/* ── Forms ── */
+.field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.3rem; }
+.field label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.field label .opt { font-weight: 400; color: var(--steel); }
+.field input,
+.field select,
+.field textarea {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  border-radius: 0;
+  padding: 0.85rem 1rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field input:focus-visible,
+.field select:focus-visible,
+.field textarea:focus-visible {
+  border-color: var(--red-deep);
+  outline: 2px solid var(--red-deep);
+  outline-offset: 0;
+}
+.field ::placeholder { color: var(--steel); opacity: 0.8; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.2rem; }
+@media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
+
+/* ── Page hero (inner pages) ── */
+.page-hero {
+  background: var(--ink);
+  color: var(--paper-on-ink);
+  padding: clamp(2.75rem, 6vw, 4.5rem) 0 clamp(2.75rem, 6vw, 4.5rem);
+}
+.page-hero .data-strip { border-bottom-color: var(--rule-on-ink); }
+.page-hero .data { color: var(--mist-on-ink); }
+.page-hero .data strong { color: var(--paper-on-ink); }
+.page-hero h1 { margin-top: clamp(1.5rem, 3.5vw, 2.2rem); }
+.page-hero .display em { color: var(--red-bright); }
+.page-sub {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--mist-on-ink);
+  max-width: 56ch;
+}
+
+/* ── Footer: the consignment manifest block ── */
+footer {
+  background: var(--ink);
+  color: var(--paper-on-ink);
+  position: relative;
+  z-index: 1;
+}
+.footer-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 4.5rem) var(--gutter) 0;
+}
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr 1fr 1fr;
+  gap: 2.5rem;
+  padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
+}
+.footer-brand p {
+  font-size: 0.92rem;
+  line-height: 1.7;
+  max-width: 40ch;
+  margin-top: 1.2rem;
+  color: var(--mist-on-ink);
+}
+.footer-contact {
+  margin-top: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.footer-contact a {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  color: var(--paper-on-ink);
+  transition: color 0.15s;
+}
+.footer-contact a:hover { color: var(--red-bright); }
+.footer-col h4 {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--red-bright);
+  margin-bottom: 1.2rem;
+}
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
+.footer-col a { font-size: 0.9rem; color: var(--mist-on-ink); transition: color 0.15s; }
+.footer-col a:hover { color: var(--paper-on-ink); }
+
+.footer-legal {
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--rule-on-ink);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem 2rem;
+}
+
+/* the consignment note header, as a footer */
+.manifest-block {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  border: 1px solid var(--rule-on-ink-strong);
+  border-bottom: none;
+}
+.mb-cell {
+  padding: 0.7rem 0.9rem 0.8rem;
+  border-right: 1px solid var(--rule-on-ink-strong);
+  min-width: 0;
+}
+.mb-cell:last-child { border-right: none; }
+.mb-cell dt {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--mist-on-ink);
+  margin-bottom: 0.3rem;
+}
+.mb-cell dd {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--paper-on-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mb-cell dd .mb-red { color: var(--red-bright); }
+
+@media (max-width: 940px) {
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 2.25rem; }
+  .footer-brand { grid-column: 1 / -1; }
+  .manifest-block { grid-template-columns: repeat(3, 1fr); }
+  .mb-cell:nth-child(3n) { border-right: none; }
+  .mb-cell:nth-child(-n+3) { border-bottom: 1px solid var(--rule-on-ink-strong); }
+}
+@media (max-width: 600px) {
+  .footer-top { grid-template-columns: 1fr; }
+  /* phone: two columns, values wrap instead of truncating */
+  .manifest-block { grid-template-columns: 1fr 1fr; }
+  .mb-cell:nth-child(3n) { border-right: 1px solid var(--rule-on-ink-strong); }
+  .mb-cell:nth-child(2n) { border-right: none; }
+  .mb-cell:nth-child(4) { border-bottom: 1px solid var(--rule-on-ink-strong); }
+  .mb-cell dd {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+}
