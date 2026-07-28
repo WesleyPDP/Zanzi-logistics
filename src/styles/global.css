@@ -529,7 +529,7 @@ footer {
   max-width: 38ch;
   color: var(--mist-on-ink);
 }
-.footer-col h4 {
+.footer-col h2 {
   font-family: var(--font-mono);
   font-size: 0.64rem;
   font-weight: 600;
