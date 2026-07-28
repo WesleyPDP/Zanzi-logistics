@@ -25,3 +25,4 @@ pnpm-debug.log*
 
 # local screenshot output
 scripts/shots/
+Marketings input/*

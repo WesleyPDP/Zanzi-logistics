@@ -1,127 +1,88 @@
 ---
 import Base from '../layouts/Base.astro';
-import { contact, hubs, quoteChecklist } from '../data/company';
+import Tab from '../components/Tab.astro';
+import { contact, capabilities, expectations } from '../data/company';
 ---
 <Base
-  title="Get a Quote · Zanzi Logistics"
-  description="Request a freight quote from Zanzi Logistics. Send the collection and delivery points, what the freight is and when it is ready, and we come back with a written rate and a collection window."
+  title="Contact · Zanzi Logistics"
+  description="The right logistics partner changes more than your supply chain. Tell us about your business and we’ll explore how Zanzi Logistics can help. Johannesburg, South Africa."
 >
 
   <header class="page-hero">
+    <div class="swoosh" aria-hidden="true"></div>
     <div class="container hero-stack">
-      <div class="data-strip">
-        <span class="data">Same-day quotes &middot; no booking fee</span>
-      </div>
-      <h1 class="display">Get a <em>quote.</em></h1>
+      <p class="label">Contact</p>
+      <h1 class="display">
+        The right partner changes<br />more than your <em>supply chain.</em>
+      </h1>
       <p class="page-sub">
-        Tell us what is moving, where from and where to. If we are the right
-        carrier for it you get a written rate and a collection window. If we are
-        not, we will say so.
+        It changes how confidently you run your business. Whether you’re looking
+        for ongoing logistics support, cross-border expertise or help with a
+        specific operational challenge, we’d love to understand your business
+        and explore how we can help.
       </p>
     </div>
   </header>
 
-  <div class="hazard" aria-hidden="true"></div>
-
-  <section class="tight enquiry-wrap">
+  <section class="tight form-section">
     <div class="container contact-grid">
 
       <!-- ═══ The form ═══ -->
-      <div class="intake rv">
-        <header class="intake-head">
-          <span class="data"><strong>Freight enquiry</strong></span>
-          <span class="data">Answered same day</span>
-        </header>
+      <div class="rv">
+        <div class="form-intro">
+          <Tab label="Tell us about your business" />
+          <p>
+            Every business operates differently. That’s why we don’t believe in
+            one-size-fits-all logistics. Tell us a little about your business,
+            what you’re trying to achieve or the challenge you’re facing, and
+            we’ll start building the right solution together.
+          </p>
+        </div>
 
-        <form id="quote-form" class="intake-body">
+        <form id="contact-form" class="intake">
           <input type="checkbox" name="botcheck" id="botcheck" class="hp-field" tabindex="-1" autocomplete="off" />
-
-          <p class="data form-legend">Section 1 &middot; Who you are</p>
 
           <div class="form-row">
             <div class="field">
-              <label for="name">Your name</label>
-              <input type="text" id="name" name="name" placeholder="Full name" required maxlength="80" autocomplete="name" />
+              <label for="name">Full Name</label>
+              <input type="text" id="name" name="name" placeholder="Your name" required maxlength="80" autocomplete="name" />
             </div>
             <div class="field">
-              <label for="company">Company <span class="opt">&middot; optional</span></label>
-              <input type="text" id="company" name="company" placeholder="Business name" maxlength="120" autocomplete="organization" />
+              <label for="company">Company Name</label>
+              <input type="text" id="company" name="company" placeholder="Your business" required maxlength="120" autocomplete="organization" />
             </div>
           </div>
 
           <div class="form-row">
             <div class="field">
-              <label for="email">Email</label>
+              <label for="email">Email Address</label>
               <input type="email" id="email" name="email" placeholder="you@company.co.za" required maxlength="254" autocomplete="email" />
             </div>
             <div class="field">
-              <label for="phone">Phone</label>
+              <label for="phone">Phone Number</label>
               <input type="tel" id="phone" name="phone" placeholder="071 234 5678" required maxlength="24" autocomplete="tel" />
             </div>
           </div>
 
-          <p class="data form-legend">Section 2 &middot; The freight</p>
-
           <div class="field">
-            <label for="service">What do you need?</label>
+            <label for="service">Service Required</label>
             <select id="service" name="service" required>
               <option value="">Select a service&hellip;</option>
-              <option>Road freight &mdash; full load (FTL)</option>
-              <option>Road freight &mdash; part load / groupage (LTL)</option>
-              <option>Containerised or abnormal haulage</option>
-              <option>Warehousing &amp; distribution (3PL)</option>
-              <option>Cross-border into SADC</option>
-              <option>Customs clearing only</option>
-              <option>International sea or air forwarding</option>
-              <option>Dedicated contract fleet</option>
-              <option>Not sure &mdash; please advise</option>
+              {capabilities.map((c) => <option>{c.name}</option>)}
+              <option>Not sure yet &mdash; please advise</option>
             </select>
           </div>
 
-          <div class="form-row">
-            <div class="field">
-              <label for="origin">Collection from</label>
-              <input type="text" id="origin" name="origin" placeholder="Town or suburb, province" required maxlength="120" />
-            </div>
-            <div class="field">
-              <label for="destination">Delivery to</label>
-              <input type="text" id="destination" name="destination" placeholder="Town or suburb, province or country" required maxlength="120" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field">
-              <label for="cargo">What is the freight? <span class="opt">&middot; optional</span></label>
-              <input type="text" id="cargo" name="cargo" placeholder="e.g. palletised dry goods" maxlength="140" />
-            </div>
-            <div class="field">
-              <label for="weight">Mass / pallets <span class="opt">&middot; optional</span></label>
-              <input type="text" id="weight" name="weight" placeholder="e.g. 3 200 kg, 6 pallets" maxlength="80" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field">
-              <label for="ready">Ready for collection <span class="opt">&middot; optional</span></label>
-              <input type="date" id="ready" name="ready" />
-            </div>
-            <div class="field">
-              <label for="frequency">How often? <span class="opt">&middot; optional</span></label>
-              <select id="frequency" name="frequency">
-                <option value="">Optional</option>
-                <option>One-off consignment</option>
-                <option>A few times a month</option>
-                <option>Weekly</option>
-                <option>Daily / ongoing contract</option>
-              </select>
-            </div>
-          </div>
-
-          <p class="data form-legend">Section 3 &middot; Anything else</p>
-
           <div class="field">
-            <label for="message">Notes <span class="opt">&middot; optional</span></label>
-            <textarea id="message" name="message" rows="5" maxlength="2000" placeholder="Loading and offloading arrangements, deadlines, special handling, hazardous or high-value cargo, or anything that would change the rate."></textarea>
+            <label for="message">Tell us about your requirements</label>
+            <textarea
+              id="message"
+              name="message"
+              rows="6"
+              maxlength="2000"
+              required
+              placeholder="What you’re trying to achieve, or the challenge you’re facing."
+            ></textarea>
           </div>
 
           <label class="consent">
@@ -130,117 +91,120 @@ import { contact, hubs, quoteChecklist } from '../data/company';
           </label>
 
           <button id="submit-btn" type="submit" class="btn btn-red form-btn">
-            Send enquiry <span class="arr">&rarr;</span>
+            <span>Submit</span> <span class="arr">&rarr;</span>
           </button>
 
           <p id="form-error" class="form-error" hidden></p>
         </form>
 
         <div id="success-msg" class="success" hidden>
-          <span class="plate plate-fill">Received</span>
-          <p class="success-title display">Enquiry logged.</p>
+          <h2 class="display success-title">Thank you.</h2>
           <p class="success-body">
-            Thank you. A controller will come back to you with a written rate,
-            or with the one question we need answered before we can price it.
+            Your message is with us. We’ll come back to you to understand your
+            business and explore how we can help.
           </p>
-          <p class="data">
-            Urgent? Call <a class="link" href={contact.phoneHref}>{contact.phone}</a>
+          <p class="success-alt">
+            Need us sooner? Call
+            <a class="link" href={contact.phoneHref}>{contact.phone}</a>
           </p>
         </div>
       </div>
 
-      <!-- ═══ Sidebar ═══ -->
+      <!-- ═══ Prefer to talk ═══ -->
       <aside class="contact-side rv">
-        <div class="side-card side-card-red">
-          <p class="data side-title">Speak to someone</p>
-          <ul class="side-lines">
-            <li>
-              <span class="data">Switchboard</span>
-              <a href={contact.phoneHref}>{contact.phone}</a>
-            </li>
-            <li>
-              <span class="data">Operations &middot; 24/7</span>
-              <a href={contact.opsPhoneHref}>{contact.opsPhone}</a>
-            </li>
-            <li>
-              <span class="data">Quotes</span>
-              <a href={`mailto:${contact.quotesEmail}`}>{contact.quotesEmail}</a>
-            </li>
-            <li>
-              <span class="data">General</span>
-              <a href={`mailto:${contact.email}`}>{contact.email}</a>
-            </li>
-          </ul>
-          <p class="side-hours data">{contact.hours}</p>
-          <p class="side-hours data">{contact.opsHours}</p>
-        </div>
+        <div class="talk-card">
+          <h2 class="talk-title display">Prefer to talk?</h2>
+          <p class="talk-body">
+            Sometimes the best conversations happen over the phone. Whether you
+            have a quick question or want to discuss your logistics requirements
+            in more detail, our team is ready to help.
+          </p>
 
-        <div class="side-card">
-          <p class="data side-title">Speeds up your quote</p>
-          <ol class="side-check">
-            {quoteChecklist.slice(0, 5).map((q) => (
-              <li><span class="data">{q.ref}</span> {q.item}</li>
-            ))}
-          </ol>
-        </div>
-
-        <div class="side-card side-card-dim">
-          <p class="data side-title">Depots</p>
-          <ul class="side-hubs">
-            {hubs.map((h) => (
-              <li>
-                <span class="hub-code data">{h.code}</span>
-                <span>
-                  <strong>{h.city}</strong>
-                  <span class="data">{h.address}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
+          <dl class="talk-list">
+            <div>
+              <dt class="label">Phone</dt>
+              <dd>
+                <a href={contact.phoneHref}>{contact.phone}</a>
+                <a href={contact.phoneAltHref}>{contact.phoneAlt}</a>
+              </dd>
+            </div>
+            <div>
+              <dt class="label">Email</dt>
+              <dd><a href={`mailto:${contact.email}`}>{contact.email}</a></dd>
+            </div>
+            <div>
+              <dt class="label">Office</dt>
+              <dd><span class="talk-plain">{contact.office}</span></dd>
+            </div>
+            <div>
+              <dt class="label">Business Hours</dt>
+              <dd><span class="talk-plain">{contact.hours}</span></dd>
+            </div>
+          </dl>
         </div>
       </aside>
 
     </div>
   </section>
 
+  <!-- ═══ What You Can Expect ═══ -->
+  <section class="dim">
+    <div class="container">
+      <div class="sec-head rv">
+        <Tab label="What you can expect" />
+        <h2 class="display">How this <em>starts.</em></h2>
+      </div>
+
+      <div class="exp-grid rv-group">
+        {expectations.map((e, i) => (
+          <div class="exp">
+            <span class="cap-no">{String(i + 1).padStart(2, '0')}</span>
+            <h3>{e.title}</h3>
+            <p>{e.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA ═══ -->
+  <section class="drench">
+    <div class="container rv-group">
+      <h2 class="display cta-title">
+        More than a conversation.<br />The start of a <em>partnership.</em>
+      </h2>
+      <p class="cta-sub">
+        At Zanzi Logistics, we believe the best partnerships are built on trust,
+        communication and shared responsibility. Every relationship starts with
+        a conversation. We look forward to having ours.
+      </p>
+      <div class="cta-actions">
+        <a href={contact.phoneHref} class="btn btn-ink"><span>Call {contact.phone}</span></a>
+        <a href={`mailto:${contact.email}`} class="btn btn-ghost-red"><span>Email Us</span></a>
+      </div>
+    </div>
+  </section>
+
 </Base>
 
 <style>
-  .enquiry-wrap { padding-bottom: clamp(4rem, 8vw, 6.5rem); }
+  .form-section { padding-bottom: clamp(3.5rem, 7vw, 5.5rem); }
   .contact-grid {
     display: grid;
-    grid-template-columns: 1.3fr 0.7fr;
+    grid-template-columns: 1.25fr 0.75fr;
     gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
   }
+  .contact-grid > * { min-width: 0; }
   @media (max-width: 940px) { .contact-grid { grid-template-columns: 1fr; } }
 
-  /* ── The form sheet ── */
-  .intake {
-    background: var(--paper-raised);
-    border: 1px solid var(--rule-strong);
+  .form-intro { margin-bottom: 2.2rem; }
+  .form-intro p {
+    font-size: 1.02rem;
+    line-height: 1.8;
+    color: var(--slate);
+    max-width: 58ch;
   }
-  .intake-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding: 0.85rem clamp(1.4rem, 3vw, 2.25rem);
-    background: var(--ink);
-    border-bottom: 2px solid var(--red);
-  }
-  .intake-head .data { color: var(--mist-on-ink); }
-  .intake-head .data strong { color: var(--paper-on-ink); }
-  .intake-body, .success { padding: clamp(1.5rem, 3.5vw, 2.25rem); }
-
-  .form-legend {
-    color: var(--red-deep);
-    font-weight: 600;
-    padding-bottom: 0.6rem;
-    margin-bottom: 1.3rem;
-    border-bottom: 1px solid var(--rule);
-  }
-  .form-legend:not(:first-of-type) { margin-top: 0.6rem; }
 
   /* honeypot: off-screen, never reachable by keyboard */
   .hp-field {
@@ -256,100 +220,104 @@ import { contact, hubs, quoteChecklist } from '../data/company';
     grid-template-columns: auto 1fr;
     align-items: start;
     gap: 0.7rem;
-    margin: 0.2rem 0 1.5rem;
-    font-size: 0.86rem;
+    margin: 0.4rem 0 1.6rem;
+    font-size: 0.88rem;
     line-height: 1.55;
-    color: var(--steel);
+    color: var(--slate);
   }
   .consent input {
     width: 18px;
     height: 18px;
-    margin-top: 0.12rem;
+    margin-top: 0.15rem;
     accent-color: var(--red);
     cursor: pointer;
   }
 
-  .form-btn { width: 100%; justify-content: center; }
+  .form-btn { justify-content: center; min-width: 14rem; }
   .form-btn:disabled { opacity: 0.55; cursor: not-allowed; }
   .form-error {
-    margin-top: 1rem;
-    font-size: 0.9rem;
+    margin-top: 1.1rem;
+    font-size: 0.92rem;
     line-height: 1.6;
     color: var(--red-deep);
     font-weight: 500;
-    border-left: 3px solid var(--red);
-    padding-left: 0.9rem;
+    border-left: 4px solid var(--red);
+    padding-left: 1rem;
   }
 
-  .success { display: flex; flex-direction: column; align-items: flex-start; gap: 1.1rem; }
+  .success { border-left: 4px solid var(--red); padding-left: 1.5rem; }
   /* author display would otherwise defeat the `hidden` attribute */
   .success[hidden] { display: none; }
-  .success-title { font-size: clamp(1.6rem, 3.2vw, 2.2rem); }
-  .success-body { color: var(--steel); line-height: 1.75; max-width: 46ch; }
+  .success-title { font-size: clamp(1.8rem, 3.6vw, 2.6rem); }
+  .success-body {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--slate);
+    max-width: 46ch;
+  }
+  .success-alt { margin-top: 1.2rem; font-size: 0.95rem; color: var(--slate); }
 
-  /* ── Sidebar ── */
+  /* ── Prefer to talk ── */
   .contact-side {
     position: sticky;
     top: calc(var(--nav-h) + 24px);
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
   }
   @media (max-width: 940px) { .contact-side { position: static; } }
 
-  .side-card { border: 1px solid var(--rule-strong); padding: clamp(1.4rem, 3vw, 1.8rem); }
-  .side-card-dim { background: var(--paper-dim); border-color: var(--rule); }
-  .side-card-red {
+  .talk-card {
     background: var(--ink);
-    border-color: var(--ink);
     color: var(--paper-on-ink);
+    padding: clamp(1.6rem, 3.5vw, 2.25rem);
+    border-top: 5px solid var(--red);
   }
-  .side-card-red .data { color: var(--mist-on-ink); }
-  .side-title { color: var(--red-deep); font-weight: 600; margin-bottom: 1.2rem; }
-  .side-card-red .side-title { color: var(--red-bright); }
-
-  .side-lines { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
-  .side-lines li { display: flex; flex-direction: column; gap: 0.25rem; }
-  .side-lines a {
+  .talk-title { font-size: clamp(1.5rem, 3vw, 1.9rem); }
+  .talk-body {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--mist-on-ink);
+  }
+  .talk-list {
+    margin-top: 1.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+  }
+  .talk-list dt { color: var(--red-bright); margin-bottom: 0.45rem; }
+  .talk-list dd { display: flex; flex-direction: column; gap: 0.3rem; }
+  .talk-list a, .talk-plain {
     font-family: var(--font-mono);
     font-size: 0.86rem;
     font-weight: 600;
     letter-spacing: 0.02em;
     color: var(--paper-on-ink);
-    transition: color 0.15s;
     word-break: break-word;
   }
-  .side-lines a:hover { color: var(--red-bright); }
-  .side-hours {
-    margin-top: 1.2rem;
-    line-height: 1.6;
-    text-transform: none;
-    letter-spacing: 0.04em;
-  }
-  .side-hours + .side-hours { margin-top: 0.5rem; }
+  .talk-list a { transition: color 0.15s; }
+  .talk-list a:hover { color: var(--red-bright); }
+  .talk-plain { font-weight: 400; color: var(--mist-on-ink); }
 
-  .side-check { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
-  .side-check li {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--ink);
+  /* ── Expectations ── */
+  .exp-grid {
     display: grid;
-    grid-template-columns: 1.8rem 1fr;
-    gap: 0.4rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(1.75rem, 3.5vw, 2.75rem);
   }
-  .side-check .data { color: var(--red-deep); font-weight: 600; }
+  .exp h3 { margin: 0.9rem 0 0.6rem; }
+  .exp p { font-size: 0.96rem; line-height: 1.8; color: var(--slate); }
+  @media (max-width: 880px) { .exp-grid { grid-template-columns: 1fr; } }
 
-  .side-hubs { list-style: none; display: flex; flex-direction: column; gap: 1rem; }
-  .side-hubs li { display: grid; grid-template-columns: 3rem 1fr; gap: 0.6rem; align-items: start; }
-  .side-hubs .hub-code { color: var(--red-deep); font-weight: 600; padding-top: 0.15rem; }
-  .side-hubs strong { display: block; font-size: 0.94rem; font-weight: 600; }
-  .side-hubs .data { display: block; margin-top: 0.2rem; }
+  /* ── CTA ── */
+  .cta-title { font-size: clamp(1.9rem, 4.4vw, 3.4rem); }
+  .cta-sub { margin-top: 1.4rem; font-size: 1.06rem; line-height: 1.8; max-width: 58ch; }
+  .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
 </style>
 
 <script>
   import { contact } from '../data/company';
 
-  const form = document.getElementById('quote-form') as HTMLFormElement;
+  const form = document.getElementById('contact-form') as HTMLFormElement;
   const btn = document.getElementById('submit-btn') as HTMLButtonElement;
   const success = document.getElementById('success-msg') as HTMLElement;
   const errorMsg = document.getElementById('form-error') as HTMLElement;
@@ -359,7 +327,7 @@ import { contact, hubs, quoteChecklist } from '../data/company';
   // setting in the Web3Forms dashboard. Set PUBLIC_WEB3FORMS_ACCESS_KEY in
   // the Cloudflare Pages build environment; see README.
   const ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY ?? '';
-  const FALLBACK_EMAIL = contact.quotesEmail;
+  const FALLBACK_EMAIL = contact.email;
 
   let sending = false;
 
@@ -368,7 +336,7 @@ import { contact, hubs, quoteChecklist } from '../data/company';
     errorMsg.hidden = false;
     sending = false;
     btn.disabled = false;
-    btn.innerHTML = 'Send enquiry <span class="arr">→</span>';
+    btn.innerHTML = '<span>Submit</span> <span class="arr">→</span>';
   };
 
   form.addEventListener('submit', async (e) => {
@@ -394,7 +362,7 @@ import { contact, hubs, quoteChecklist } from '../data/company';
 
     const fields = new FormData(form);
     fields.append('access_key', ACCESS_KEY);
-    fields.append('subject', 'Freight enquiry · Zanzi Logistics website');
+    fields.append('subject', 'New enquiry · Zanzi Logistics website');
     fields.append('from_name', 'Zanzi Logistics Website');
 
     try {
@@ -406,6 +374,7 @@ import { contact, hubs, quoteChecklist } from '../data/company';
       const data = await res.json().catch(() => ({}) as any);
       if (res.ok && data.success) {
         form.hidden = true;
+        (document.querySelector('.form-intro') as HTMLElement)?.setAttribute('hidden', '');
         success.hidden = false;
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
         return;

@@ -4,37 +4,33 @@ import { contact } from '../data/company';
 ---
 <Base
   title="Page Not Found · Zanzi Logistics"
-  description="This page could not be found. Head back to the Zanzi Logistics home page, or get in touch about a freight quote."
+  description="This page could not be found. Head back to the Zanzi Logistics home page, or start a conversation with us."
 >
 
   <header class="page-hero nf">
+    <div class="swoosh" aria-hidden="true"></div>
     <div class="container hero-stack">
-      <div class="data-strip">
-        <span class="data">Nothing at this address</span>
-      </div>
-      <h1 class="display">This load went<br /><em>missing.</em></h1>
+      <p class="label">404</p>
+      <h1 class="display">This one took a<br /><em>wrong turn.</em></h1>
       <p class="page-sub">
-        The page you asked for is not here &mdash; it may have moved, or the
-        link may have been mistyped. Everything else is still where you left it.
+        The page you asked for isn’t here &mdash; it may have moved, or the link
+        may have been mistyped. Everything else is exactly where you left it.
       </p>
       <div class="nf-actions">
-        <a href="/" class="btn btn-red">Back to home <span class="arr">&rarr;</span></a>
-        <a href="/services" class="btn btn-ghost-ink">Services</a>
-        <a href="/contact" class="btn btn-ghost-ink">Get a quote</a>
+        <a href="/" class="btn btn-red"><span>Back to Home</span> <span class="arr">&rarr;</span></a>
+        <a href="/services" class="btn btn-ghost-ink"><span>Capabilities</span></a>
+        <a href="/contact" class="btn btn-ghost-ink"><span>Let’s Talk</span></a>
       </div>
-      <p class="data nf-note">
-        Chasing a consignment? Call operations on
-        <a class="link" href={contact.opsPhoneHref}>{contact.opsPhone}</a>
+      <p class="nf-note label">
+        Or call us on <a class="link" href={contact.phoneHref}>{contact.phone}</a>
       </p>
     </div>
   </header>
-
-  <div class="hazard" aria-hidden="true"></div>
 
 </Base>
 
 <style>
   .nf { padding-bottom: clamp(4rem, 9vw, 7rem); }
-  .nf-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
-  .nf-note { margin-top: 2rem; }
+  .nf-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.4rem; }
+  .nf-note { margin-top: 2rem; letter-spacing: 0.08em; }
 </style>

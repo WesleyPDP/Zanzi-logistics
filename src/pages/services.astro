@@ -1,166 +1,100 @@
 ---
 import Base from '../layouts/Base.astro';
-import SecMark from '../components/SecMark.astro';
-import { divisions, equipment, quoteChecklist } from '../data/company';
-
-// Divisions alternate paper / dim down the page.
-const bands = ['', 'dim', ''];
-const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
+import Tab from '../components/Tab.astro';
+import { capabilities, certifications } from '../data/company';
 ---
 <Base
-  title="Services · Road Freight, Warehousing & Customs · Zanzi Logistics"
-  description="Zanzi Logistics services: FTL and LTL road freight, containerised and abnormal haulage, 3PL warehousing, pick and pack, cross-docking, SADC cross-border freight, customs clearing and international forwarding."
+  title="Capabilities · Zanzi Logistics"
+  description="Linehaul, same-day express, cross-border, dedicated freight, project logistics, healthcare logistics and warehousing. Every Zanzi Logistics service is backed by dependable execution, proactive communication and genuine partnership."
 >
 
   <header class="page-hero">
+    <div class="swoosh" aria-hidden="true"></div>
     <div class="container hero-stack">
-      <div class="data-strip">
-        <span class="data">{divisions.length} divisions &middot; {serviceCount} services</span>
-        <span class="data">
-          {divisions.map((d, i) => <>{i > 0 && ' · '}<strong>{d.code}</strong></>)}
-        </span>
-      </div>
-      <h1 class="display">What we <em>move,</em><br />hold and clear.</h1>
+      <p class="label">Our capabilities</p>
+      <h1 class="display">What we <em>take care of.</em></h1>
       <p class="page-sub">
-        Three divisions under one roof. If a job needs all three &mdash; cleared
-        at the border, held in the warehouse, delivered on our own fleet &mdash;
-        it stays on one waybill and one invoice.
+        Whether your freight is travelling across town or across Southern
+        Africa, every service is backed by the same commitment: dependable
+        execution, proactive communication and genuine partnership.
       </p>
     </div>
   </header>
 
-  <div class="hazard" aria-hidden="true"></div>
-
-  <!-- Division index -->
-  <section class="tight">
+  <!-- ═══ Index ═══ -->
+  <section class="tight dim">
     <div class="container">
-      <nav class="div-index rv-group" aria-label="Divisions">
-        {divisions.map((d) => (
-          <a href={`#${d.slug}`} class="dx">
-            <span class="plate">{d.code}</span>
-            <span class="dx-body">
-              <span class="dx-name">{d.name}</span>
-              <span class="data">{d.short}</span>
-            </span>
+      <nav class="cap-index rv-group" aria-label="Capabilities">
+        {capabilities.map((c) => (
+          <a href={`#${c.slug}`} class="ci">
+            <span class="cap-no">{c.no}</span>
+            <span class="ci-name">{c.name}</span>
           </a>
         ))}
       </nav>
     </div>
   </section>
 
-  <!-- ═══ Divisions ═══ -->
-  {divisions.map((d, i) => (
-    <section id={d.slug} class={bands[i]}>
-      <div class="container">
-        <div class="sec-head rv">
-          <SecMark label={`Division ${d.code}`} />
-          <h2 class="display">{d.name}</h2>
-          <p class="sub">{d.blurb}</p>
-        </div>
-
-        <div class="table-scroll rv">
-          <table class="manifest">
-            <thead>
-              <tr>
-                <th scope="col">Ref</th>
-                <th scope="col">Service</th>
-                <th scope="col">What it covers</th>
-              </tr>
-            </thead>
-            <tbody>
-              {d.services.map((s) => (
-                <tr>
-                  <th scope="row" class="m-code">{s.ref}</th>
-                  <td class="svc-name">{s.name}</td>
-                  <td>{s.desc}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-  ))}
-
-  <!-- ═══ Equipment (black) ═══ -->
-  <section class="ink-section">
+  <!-- ═══ Capabilities in full ═══ -->
+  <section class="cap-detail">
     <div class="container">
-      <div class="sec-head rv">
-        <SecMark label="Equipment" />
-        <h2 class="display">The right vehicle,<br />not the <em>nearest</em> one.</h2>
-        <p class="sub">
-          The vehicle is chosen from the mass, the dimensions and what is at
-          each end. Quoting a superlink for a two-pallet job is how you end up
-          paying for air.
-        </p>
-      </div>
-
-      <div class="table-scroll rv">
-        <table class="manifest">
-          <thead>
-            <tr>
-              <th scope="col">Vehicle</th>
-              <th scope="col">Payload</th>
-              <th scope="col">Deck</th>
-              <th scope="col">Typical use</th>
-            </tr>
-          </thead>
-          <tbody>
-            {equipment.map((e) => (
-              <tr>
-                <th scope="row">{e.type}</th>
-                <td class="m-num">{e.payload}</td>
-                <td class="m-num">{e.deck}</td>
-                <td>{e.use}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div class="cap-rows">
+        {capabilities.map((c) => (
+          <article id={c.slug} class="cr rv">
+            <div class="cr-head">
+              <span class="cap-no">{c.no}</span>
+              <h2 class="display cr-name">{c.name}</h2>
+            </div>
+            <div class="cr-body">
+              <p class="cr-lead">{c.lead}</p>
+              <p class="cr-copy">{c.body}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- ═══ Quote checklist ═══ -->
-  <section class="dim">
+  <!-- ═══ Certified for Confidence ═══ -->
+  <section class="ink-section" id="certifications">
+    <div class="swoosh" aria-hidden="true"></div>
     <div class="container">
       <div class="sec-head rv">
-        <SecMark label="Before you ask" />
-        <h2 class="display">Six answers and<br />you have a <em>rate.</em></h2>
+        <Tab label="Certified for confidence" />
+        <h2 class="display">Backed by recognised<br /><em>standards.</em></h2>
         <p class="sub">
-          Send these with your enquiry and the quote comes back same-day.
-          Send what you have and we will ask for the rest &mdash; but the more
-          of this you can give us, the firmer the number.
+          Our commitment to quality, safety and operational excellence is backed
+          by internationally recognised management standards.
         </p>
       </div>
 
-      <ol class="check-grid rv-group">
-        {quoteChecklist.map((q) => (
-          <li class="check">
-            <span class="data check-ref">{q.ref}</span>
-            <h3>{q.item}</h3>
-            <p>{q.why}</p>
-          </li>
+      <div class="iso-list rv-group">
+        {certifications.map((c) => (
+          <div class="iso-row">
+            <span class="iso-code">{c.code}</span>
+            <div>
+              <h3>{c.name}</h3>
+              <p>{c.body}</p>
+            </div>
+          </div>
         ))}
-      </ol>
+      </div>
     </div>
   </section>
 
   <!-- ═══ CTA ═══ -->
   <section class="drench">
     <div class="container rv-group">
-      <div class="data-strip cta-strip">
-        <span class="data">Same-day quotes</span>
-        <span class="data">Written rates</span>
-        <span class="data">Ad-hoc or contract</span>
-      </div>
-      <h2 class="display cta-title">Send us the <em>load.</em></h2>
+      <h2 class="display cta-title">
+        Not sure which one<br />you <em>need?</em>
+      </h2>
       <p class="cta-sub">
-        One job or a full contract &mdash; both start the same way, with the
-        details of what needs to move.
+        Tell us what you’re trying to achieve or the challenge you’re facing,
+        and we’ll start building the right solution together.
       </p>
       <div class="cta-actions">
-        <a href="/contact" class="btn btn-ink">Get a quote <span class="arr">&rarr;</span></a>
-        <a href="/network" class="btn btn-ghost-red">See the network</a>
+        <a href="/contact" class="btn btn-ink"><span>Start the Conversation</span> <span class="arr">&rarr;</span></a>
+        <a href="/network" class="btn btn-ghost-red"><span>Where We Move</span></a>
       </div>
     </div>
   </section>
@@ -168,50 +102,82 @@ const serviceCount = divisions.reduce((n, d) => n + d.services.length, 0);
 </Base>
 
 <style>
-  /* ── Division index ── */
-  .div-index {
+  /* ── Index ── */
+  .cap-index {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-  .dx {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
     border: 1px solid var(--rule);
-    background: var(--paper-raised);
+  }
+  .ci {
+    background: var(--paper);
     padding: 1.1rem 1.25rem;
-    transition: border-color 0.18s;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    transition: background 0.18s;
   }
-  .dx:hover { border-color: var(--red); }
-  .dx .plate { flex-shrink: 0; }
-  .dx-body { display: flex; flex-direction: column; gap: 0.35rem; }
-  .dx-name { font-weight: 600; font-size: 1rem; line-height: 1.3; }
-  @media (max-width: 900px) { .div-index { grid-template-columns: 1fr; } }
+  .ci:hover { background: var(--paper-deep); }
+  .ci .cap-no { font-size: 0.95rem; }
+  .ci-name { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+  @media (max-width: 940px) { .cap-index { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .cap-index { grid-template-columns: 1fr; } }
 
-  /* ── Service tables ── */
-  .svc-name { color: var(--ink) !important; font-weight: 500; white-space: nowrap; }
-  @media (max-width: 700px) { .svc-name { white-space: normal; } }
-
-  /* ── Quote checklist ── */
-  .check-grid {
-    list-style: none;
+  /* ── Capability rows ── */
+  .cap-rows { display: flex; flex-direction: column; }
+  .cr {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    grid-template-columns: 0.85fr 1.15fr;
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--nav-h) + 20px);
   }
-  .check { border-top: 2px solid var(--red); padding-top: 1.2rem; }
-  .check-ref { color: var(--red-deep); font-weight: 600; }
-  .check h3 { margin: 0.5rem 0 0.6rem; font-size: 1.1rem; }
-  .check p { font-size: 0.92rem; line-height: 1.7; color: var(--steel); }
-  @media (max-width: 940px) { .check-grid { grid-template-columns: 1fr 1fr; } }
-  @media (max-width: 600px) { .check-grid { grid-template-columns: 1fr; } }
+  .cr:first-child { padding-top: 0; }
+  .cr:last-child { border-bottom: none; }
+  .cr-head { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .cr-head .cap-no { font-size: 1.4rem; }
+  .cr-name { font-size: clamp(1.6rem, 3.2vw, 2.4rem); }
+  .cr-lead {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(1.15rem, 2.2vw, 1.5rem);
+    line-height: 1.3;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    color: var(--red-deep);
+    margin-bottom: 1.1rem;
+  }
+  .cr-copy { font-size: 1.02rem; line-height: 1.85; color: var(--slate); }
+  @media (max-width: 820px) {
+    .cr { grid-template-columns: 1fr; gap: 1.25rem; }
+    .cr-head { flex-direction: row; align-items: baseline; gap: 1rem; }
+  }
+
+  /* ── ISO ── */
+  .iso-list { display: flex; flex-direction: column; }
+  .iso-row {
+    display: grid;
+    grid-template-columns: 12rem 1fr;
+    gap: 1rem 2.5rem;
+    padding: 1.6rem 0;
+    border-bottom: 1px solid var(--rule-on-ink);
+  }
+  .iso-row:last-child { border-bottom: none; }
+  .iso-code {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: 0.02em;
+    color: var(--red-bright);
+  }
+  .iso-row h3 { margin-bottom: 0.5rem; }
+  .iso-row p { font-size: 0.98rem; line-height: 1.8; color: var(--mist-on-ink); }
+  @media (max-width: 700px) { .iso-row { grid-template-columns: 1fr; gap: 0.6rem; } }
 
   /* ── CTA ── */
-  .cta-title {
-    margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
-    font-size: clamp(2.5rem, 7vw, 5.2rem);
-  }
-  .cta-sub { margin-top: 1.2rem; font-size: 1.04rem; line-height: 1.75; max-width: 48ch; }
+  .cta-title { font-size: clamp(1.9rem, 4.4vw, 3.4rem); }
+  .cta-sub { margin-top: 1.4rem; font-size: 1.06rem; line-height: 1.8; max-width: 54ch; }
   .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
 </style>

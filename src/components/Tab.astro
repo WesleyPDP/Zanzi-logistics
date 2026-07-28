@@ -1,0 +1,12 @@
+---
+/**
+ * The section marker from the company profile: a red tab cut on the
+ * same angle as the logo's Z. The inner span un-skews so the text
+ * itself stays upright.
+ */
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<div class="tab"><span>{label}</span></div>

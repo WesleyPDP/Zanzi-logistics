@@ -94,23 +94,23 @@ export interface MapPlace {
 
 /** Depots get a red square and a large code; the rest are route waypoints. */
 /**
- * Label offsets are chosen to sit in the gaps between the route lines that
- * meet at each point. Where that is impossible — Johannesburg has five legs
- * converging on it — the labels also carry a dark halo (see `paint-order`
- * in network.astro) so they stay legible over a line.
+ * Zanzi operates from a single base in Johannesburg — that is the only
+ * marker drawn as a base. Everything else is a destination served, not a
+ * depot. Label offsets sit in the gaps between the route lines meeting at
+ * each point; labels also carry a dark halo (`paint-order` in
+ * network.astro) so they stay legible where a line passes behind.
  */
 export const mapDepots: MapPlace[] = [
-  { code: 'JNB', name: 'Johannesburg', lon: 28.05, lat: -26.2, dx: 20, dy: -14, anchor: 'start' },
-  { code: 'DUR', name: 'Durban', lon: 31.02, lat: -29.86, dx: 18, dy: -2, anchor: 'start' },
-  // west over the Atlantic: the only leg out of Cape Town runs east
-  { code: 'CPT', name: 'Cape Town', lon: 18.42, lat: -33.93, dx: -18, dy: -6, anchor: 'end' },
+  { code: 'JNB', name: 'Johannesburg', lon: 28.05, lat: -26.2, dx: 20, dy: -12, anchor: 'start' },
 ];
 
+/** Major centres served on linehaul from the Johannesburg base. */
 export const mapCities: MapPlace[] = [
   { code: 'PLK', name: 'Polokwane', lon: 29.45, lat: -23.9, dx: 13, dy: 5, anchor: 'start' },
-  // above the marker — the Nakop, Cape Town and Gqeberha legs all leave below it
-  { code: 'BFN', name: 'Bloemfontein', lon: 26.21, lat: -29.09, dx: 0, dy: -16, anchor: 'middle' },
-  // below the marker, clear of the coastal run in from Cape Town
+  { code: 'BFN', name: 'Bloemfontein', lon: 26.21, lat: -29.09, dx: -13, dy: 4, anchor: 'end' },
+  { code: 'CPT', name: 'Cape Town', lon: 18.42, lat: -33.93, dx: -13, dy: 4, anchor: 'end' },
+  { code: 'DUR', name: 'Durban', lon: 31.02, lat: -29.86, dx: 14, dy: 4, anchor: 'start' },
+  // below the marker, clear of the run in from Johannesburg
   { code: 'PLZ', name: 'Gqeberha', lon: 25.6, lat: -33.96, dx: 0, dy: 26, anchor: 'middle' },
 ];
 
@@ -131,22 +131,24 @@ export const mapNeighbours = [
   { name: 'Lesotho', lon: 28.25, lat: -29.6 },
 ] as const;
 
-/** Route legs, given as place codes resolved against the sets above. */
+/**
+ * Route legs, given as place codes resolved against the sets above.
+ * Everything runs from the Johannesburg base — hub and spoke, because
+ * that is genuinely how the operation is shaped.
+ */
 export const mapRoutes = {
   domestic: [
     ['JNB', 'PLK'],
     ['JNB', 'DUR'],
     ['JNB', 'BFN'],
-    ['BFN', 'CPT'],
-    ['BFN', 'PLZ'],
-    ['PLZ', 'CPT'],
-    ['DUR', 'PLZ'],
+    ['JNB', 'CPT'],
+    ['JNB', 'PLZ'],
   ],
   crossBorder: [
-    ['PLK', 'BBR'],
+    ['JNB', 'BBR'],
     ['JNB', 'LEB'],
     ['JNB', 'SKP'],
-    ['BFN', 'NKP'],
+    ['JNB', 'NKP'],
   ],
 } as const;
 

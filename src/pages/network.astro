@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import SecMark from '../components/SecMark.astro';
-import { hubs, lanes, corridors, placeNames } from '../data/company';
+import Tab from '../components/Tab.astro';
+import { contact, crossings, centres } from '../data/company';
 import {
   southAfrica, lesotho, mapDepots, mapCities, mapBorders, mapNeighbours,
   mapRoutes, project, ringToPath, VIEW_W, VIEW_H,
@@ -24,65 +24,32 @@ const domesticLegs = mapRoutes.domestic.map(leg);
 const borderLegs = mapRoutes.crossBorder.map(leg);
 ---
 <Base
-  title="Network · Depots, Lead Times & Cross-Border · Zanzi Logistics"
-  description="The Zanzi Logistics network: depots in Johannesburg, Cape Town and Durban, scheduled national linehaul with indicative lead times, SADC cross-border corridors, and international sea and air forwarding."
+  title="Coverage · Zanzi Logistics"
+  description="From our Johannesburg base we move freight across South Africa and throughout the SADC region, with the customs experience to make cross-border movement straightforward."
 >
 
   <header class="page-hero">
+    <div class="swoosh" aria-hidden="true"></div>
     <div class="container hero-stack">
-      <div class="data-strip">
-        <span class="data">{hubs.length} depots &middot; 9 provinces &middot; {corridors.length} corridors</span>
-      </div>
-      <h1 class="display">Where we <em>run.</em></h1>
+      <p class="label">Coverage</p>
+      <h1 class="display">Across town, or across<br /><em>Southern Africa.</em></h1>
       <p class="page-sub">
-        Scheduled linehaul between our own depots, delivery into any address in
-        South Africa, and overland routes into the SADC region. Everything below
-        is indicative &mdash; the transit times on your quote are the ones we
-        commit to.
+        We operate from Johannesburg, moving freight nationally and across the
+        region. Wherever it’s going, the commitment is the same: dependable
+        execution, proactive communication and genuine partnership.
       </p>
     </div>
   </header>
 
-  <div class="hazard" aria-hidden="true"></div>
-
-  <!-- ═══ Depots ═══ -->
-  <section id="depots">
-    <div class="container">
-      <div class="sec-head rv">
-        <SecMark label="Depots" />
-        <h2 class="display">Three <em>depots,</em><br />one operation.</h2>
-        <p class="sub">
-          Every load routes through a depot we run ourselves. Nothing sits in a
-          yard belonging to someone we have never met.
-        </p>
-      </div>
-
-      <div class="hub-grid rv-group">
-        {hubs.map((h) => (
-          <div class={`hub ${h.primary ? 'hub-hq' : ''}`}>
-            <div class="hub-top">
-              <span class="hub-code">{h.code}</span>
-              {h.primary && <span class="plate plate-fill">HQ</span>}
-            </div>
-            <h3>{h.city}</h3>
-            <p class="data hub-role">{h.role}</p>
-            <p class="hub-addr">{h.address}</p>
-            <p class="hub-note">{h.note}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
   <!-- ═══ The map ═══ -->
-  <section class="ink-section">
+  <section class="ink-section map-section">
     <div class="container">
       <div class="sec-head rv">
-        <SecMark label="Where we run" />
-        <h2 class="display">The lines we <em>run</em> weekly.</h2>
+        <Tab label="Where we move" />
+        <h2 class="display">One base.<br />A whole <em>region.</em></h2>
         <p class="sub">
-          White runs are scheduled domestic linehaul between our depots. Red
-          runs cross a border. Positions are drawn from real coordinates; the
+          White runs are domestic linehaul from our Johannesburg base. Red runs
+          head for a border. Positions are drawn from real coordinates; the
           routes are simplified to the corridor, not the road.
         </p>
       </div>
@@ -94,14 +61,14 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
           role="img"
           aria-labelledby="map-title map-desc"
         >
-          <title id="map-title">Map of the Zanzi Logistics network in South Africa</title>
+          <title id="map-title">Map of Zanzi Logistics coverage from Johannesburg</title>
           <desc id="map-desc">
-            A map of South Africa showing depots at Johannesburg, Cape Town and
-            Durban, linked by scheduled linehaul that also serves Polokwane,
-            Bloemfontein and Gqeberha. Cross-border routes run to the Beitbridge
-            border with Zimbabwe, Lebombo with Mozambique, Skilpadshek with
-            Botswana and Nakop with Namibia. The same information is given
-            precisely in the lead-time and corridor tables on this page.
+            A map of South Africa. Zanzi Logistics operates from a base in
+            Johannesburg, running domestic linehaul to Cape Town, Durban,
+            Gqeberha, Bloemfontein and Polokwane, and cross-border routes to
+            the Beitbridge crossing for Zimbabwe, Lebombo for Mozambique,
+            Skilpadshek for Botswana and Nakop for Namibia. The centres and
+            border crossings are also listed in full on this page.
           </desc>
 
           <!-- landmass, with Lesotho cut out -->
@@ -129,7 +96,7 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
             ))}
           </g>
 
-          <!-- border posts -->
+          <!-- border crossings -->
           <g class="m-border">
             {mapBorders.map((b) => {
               const [x, y] = project(b.lon, b.lat);
@@ -142,7 +109,7 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
             })}
           </g>
 
-          <!-- route waypoints -->
+          <!-- centres served -->
           <g class="m-city">
             {mapCities.map((c) => {
               const [x, y] = project(c.lon, c.lat);
@@ -155,20 +122,20 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
             })}
           </g>
 
-          <!-- depots -->
+          <!-- the base -->
           <g class="m-depot">
             {mapDepots.map((d) => {
               const [x, y] = project(d.lon, d.lat);
               return (
                 <>
                   <rect x={x - 7} y={y - 7} width="14" height="14" />
-                  <text x={x + d.dx} y={y + d.dy} text-anchor={d.anchor}>{d.code}</text>
+                  <text x={x + d.dx} y={y + d.dy} text-anchor={d.anchor}>{d.name}</text>
                   <text
                     class="m-depot-sub"
                     x={x + d.dx}
                     y={y + d.dy + 15}
                     text-anchor={d.anchor}
-                  >{d.name}</text>
+                  >Our base</text>
                 </>
               );
             })}
@@ -182,160 +149,78 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
             <text x="76" y="64">Cross-border</text>
           </g>
         </svg>
-
-        <p class="map-note data">
-          Zambia is served via Beitbridge and Chirundu, under bond &middot;
-          delivery reaches any address in all nine provinces, not only the
-          points shown
-        </p>
       </div>
     </div>
   </section>
 
-  <!-- ═══ Lanes ═══ -->
-  <section id="lanes" class="dim">
+  <!-- ═══ National ═══ -->
+  <section>
+    <div class="container">
+      <div class="split rv">
+        <div>
+          <Tab label="Nationally" />
+          <h2 class="display">Keeping your operations <em>connected.</em></h2>
+          <p class="split-lead">
+            Reliable transport between branches, warehouses and distribution
+            centres, into every major centre in the country &mdash; and to the
+            addresses in between.
+          </p>
+        </div>
+        <div>
+          <ul class="centre-list">
+            {centres.map((c) => <li>{c}</li>)}
+          </ul>
+          <p class="centre-note">
+            Delivering somewhere not on this list? That’s usually a yes &mdash;
+            <a class="link" href="/contact">tell us where it needs to go</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ Cross-border ═══ -->
+  <section class="dim">
     <div class="container">
       <div class="sec-head rv">
-        <SecMark label="Domestic lead times" />
-        <h2 class="display">How long it <em>takes.</em></h2>
+        <Tab label="Cross-border" />
+        <h2 class="display">Southern Africa without<br />the <em>uncertainty.</em></h2>
         <p class="sub">
-          Transit time is counted from collection, in working days. Part loads
-          run longer than full loads because they wait for a full vehicle
-          &mdash; that is the trade you make for the lower rate.
+          Moving freight across borders is about more than transport. It’s about
+          documentation, compliance, coordination and experience. We manage the
+          complexity behind the scenes so your business can continue moving
+          forward.
         </p>
       </div>
 
-      <div class="table-scroll rv">
-        <table class="manifest">
-          <thead>
-            <tr>
-              <th scope="col">Lane</th>
-              <th scope="col">Route</th>
-              <th scope="col">Distance</th>
-              <th scope="col">Full load</th>
-              <th scope="col">Part load</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lanes.map((l) => (
-              <tr>
-                <th scope="row">
-                  <span class="m-code">{l.from}</span> &rarr; <span class="m-code">{l.to}</span>
-                </th>
-                <td>{placeNames[l.from]} to {placeNames[l.to]}</td>
-                <td class="m-num">{l.km}</td>
-                <td class="m-num">{l.ftl}</td>
-                <td class="m-num">{l.ltl}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div class="cross-grid rv-group">
+        {crossings.map((c) => (
+          <div class="cross">
+            <span class="cross-country">{c.country}</span>
+            <span class="label cross-post">via {c.post}</span>
+          </div>
+        ))}
       </div>
 
-      <p class="table-note rv">
-        Lanes not listed are quoted on request &mdash; we deliver into all nine
-        provinces, including farm and mine addresses off the main routes.
+      <p class="cross-note rv">
+        Transit depends entirely on the consignment and the paperwork, so we
+        quote it per shipment rather than publishing a number we can’t stand
+        behind. Ask us and you’ll get a straight answer for your freight.
       </p>
-    </div>
-  </section>
-
-  <!-- ═══ Corridors ═══ -->
-  <section id="corridors">
-    <div class="container">
-      <div class="sec-head rv">
-        <SecMark label="Cross-border corridors" />
-        <h2 class="display">Cleared before<br />the <em>border.</em></h2>
-        <p class="sub">
-          Entries are lodged and duties settled while the vehicle is still
-          loading. A truck sitting at a border post is a truck you are paying
-          for twice.
-        </p>
-      </div>
-
-      <div class="table-scroll rv">
-        <table class="manifest">
-          <thead>
-            <tr>
-              <th scope="col">Destination</th>
-              <th scope="col">Border post</th>
-              <th scope="col">Transit</th>
-              <th scope="col">Service</th>
-            </tr>
-          </thead>
-          <tbody>
-            {corridors.map((c) => (
-              <tr>
-                <th scope="row">{c.country}</th>
-                <td class="m-code">{c.border}</td>
-                <td class="m-num">{c.transit}</td>
-                <td>{c.note}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <p class="table-note rv">
-        Transit times assume the paperwork is complete and correct at
-        collection. Missing documents are the single biggest cause of delay on
-        every corridor above &mdash; we check yours before the truck moves.
-      </p>
-    </div>
-  </section>
-
-  <!-- ═══ International ═══ -->
-  <section id="international" class="dim">
-    <div class="container int-grid">
-      <div class="rv">
-        <SecMark label="International" />
-        <h2 class="display">Beyond the <em>region.</em></h2>
-        <p class="int-lead">
-          Import and export beyond SADC is handled as freight forwarding: we
-          book the sea or air leg, clear it on arrival, and run the inland leg
-          on our own fleet. One company from the port to the door.
-        </p>
-      </div>
-
-      <div class="rv">
-        <ul class="int-list">
-          <li>
-            <span class="data data-red">Sea freight</span>
-            <p>Full container (FCL) and groupage (LCL) through Durban and Cape Town, with drayage and unpack included.</p>
-          </li>
-          <li>
-            <span class="data data-red">Air freight</span>
-            <p>Time-critical import and export through OR Tambo and Cape Town International, cleared and delivered onward.</p>
-          </li>
-          <li>
-            <span class="data data-red">Clearing &amp; forwarding</span>
-            <p>Entries lodged under our own customs code, duties and VAT calculated, and queries handled with the revenue authority directly.</p>
-          </li>
-          <li>
-            <span class="data data-red">Door to door</span>
-            <p>Quoted as one price from the supplier's floor to yours, with the inland leg on Zanzi vehicles rather than a subcontractor.</p>
-          </li>
-        </ul>
-      </div>
     </div>
   </section>
 
   <!-- ═══ CTA ═══ -->
   <section class="drench">
     <div class="container rv-group">
-      <div class="data-strip cta-strip">
-        <span class="data">All nine provinces</span>
-        <span class="data">{corridors.length} SADC corridors</span>
-        <span class="data">Sea &amp; air forwarding</span>
-      </div>
-      <h2 class="display cta-title">Not on the <em>list?</em></h2>
+      <h2 class="display cta-title">Tell us where it<br />needs to <em>go.</em></h2>
       <p class="cta-sub">
-        Off-route, cross-border or overseas &mdash; send us the origin and
-        destination and we will tell you honestly whether we are the right
-        carrier for it.
+        Whether it’s across town or across a border, we’d like to understand
+        your operation before we quote it.
       </p>
       <div class="cta-actions">
-        <a href="/contact" class="btn btn-ink">Ask about a route <span class="arr">&rarr;</span></a>
-        <a href="/services" class="btn btn-ghost-red">See all services</a>
+        <a href="/contact" class="btn btn-ink"><span>Start the Conversation</span> <span class="arr">&rarr;</span></a>
+        <a href={contact.phoneHref} class="btn btn-ghost-red"><span>Call {contact.phone}</span></a>
       </div>
     </div>
   </section>
@@ -343,63 +228,11 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
 </Base>
 
 <style>
-  /* ── Depots ── */
-  .hub-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: clamp(1.25rem, 2.5vw, 2rem);
-  }
-  .hub {
-    border: 1px solid var(--rule-strong);
-    background: var(--paper-raised);
-    padding: clamp(1.4rem, 3vw, 2rem);
-  }
-  .hub-hq { border-color: var(--red); border-width: 2px; }
-  .hub-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 1.1rem;
-  }
-  .hub-code {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 2.4rem;
-    line-height: 1;
-    letter-spacing: 0.04em;
-    color: var(--red);
-  }
-  .hub h3 { margin-bottom: 0.4rem; }
-  .hub-role { color: var(--red-deep); font-weight: 600; }
-  .hub-addr {
-    margin-top: 0.9rem;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--ink);
-  }
-  .hub-note {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.9rem;
-    line-height: 1.7;
-    color: var(--steel);
-  }
-  @media (max-width: 900px) { .hub-grid { grid-template-columns: 1fr; } }
-
   /* ── The map ── */
-  .map-wrap { max-width: 860px; margin: 0 auto; }
+  .map-section { overflow: hidden; }
+  .map-wrap { max-width: 880px; margin: 0 auto; }
   .map { width: 100%; height: auto; }
-  .map-note {
-    margin-top: 1.2rem;
-    line-height: 1.7;
-    text-transform: none;
-    letter-spacing: 0.04em;
-    max-width: 68ch;
-  }
 
-  /* the country sits just above the black band so the coastline reads */
   .m-land {
     fill: var(--ink-line);
     stroke: var(--rule-on-ink-strong);
@@ -466,16 +299,17 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
     font-family: var(--font-display);
     font-size: 21px;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
     fill: var(--paper-on-ink);
   }
   .m-depot .m-depot-sub {
     font-family: var(--font-mono);
     font-size: 10px;
     font-weight: 400;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    fill: var(--mist-on-ink);
+    fill: var(--red-bright);
   }
 
   .m-key text {
@@ -488,38 +322,81 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
   .m-key-dom { stroke: var(--paper-on-ink); stroke-width: 2.5; stroke-dasharray: 12 7; }
   .m-key-xb { stroke: var(--red-bright); stroke-width: 2.5; stroke-dasharray: 6 5; }
 
-  /* ── Tables ── */
-  .table-note {
-    margin-top: 1.5rem;
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--steel);
-    max-width: 62ch;
-  }
-
-  /* ── International ── */
-  .int-grid {
+  /* ── National ── */
+  .split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(2rem, 4vw, 4rem);
+    grid-template-columns: 0.95fr 1.05fr;
+    gap: clamp(2rem, 5vw, 4.5rem);
     align-items: start;
   }
-  .int-lead {
+  .split-lead {
     margin-top: 1.4rem;
-    font-size: 1.02rem;
-    line-height: 1.8;
-    color: var(--steel);
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--slate);
   }
-  .int-list { list-style: none; border-top: 2px solid var(--red); }
-  .int-list li { padding: 1.2rem 0; border-bottom: 1px solid var(--rule); }
-  .int-list p { margin-top: 0.5rem; font-size: 0.94rem; line-height: 1.7; color: var(--steel); }
-  @media (max-width: 900px) { .int-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 880px) { .split { grid-template-columns: 1fr; } }
+
+  .centre-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .centre-list li {
+    background: var(--paper);
+    padding: 0.95rem 1.1rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+  .centre-note {
+    margin-top: 1.3rem;
+    font-size: 0.95rem;
+    line-height: 1.75;
+    color: var(--slate);
+  }
+  @media (max-width: 440px) { .centre-list { grid-template-columns: 1fr; } }
+
+  /* ── Cross-border ── */
+  .cross-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+  }
+  .cross {
+    background: var(--paper);
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    border-left: 3px solid var(--red);
+  }
+  .cross-country {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+  }
+  .cross-post { letter-spacing: 0.1em; }
+  .cross-note {
+    margin-top: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--slate);
+    max-width: 64ch;
+  }
+  @media (max-width: 900px) { .cross-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .cross-grid { grid-template-columns: 1fr; } }
 
   /* ── CTA ── */
-  .cta-title {
-    margin-top: clamp(1.6rem, 3.5vw, 2.4rem);
-    font-size: clamp(2.5rem, 7vw, 5.2rem);
-  }
-  .cta-sub { margin-top: 1.2rem; font-size: 1.04rem; line-height: 1.75; max-width: 48ch; }
+  .cta-title { font-size: clamp(1.9rem, 4.4vw, 3.4rem); }
+  .cta-sub { margin-top: 1.4rem; font-size: 1.06rem; line-height: 1.8; max-width: 52ch; }
   .cta-actions { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 2.2rem; }
 </style>

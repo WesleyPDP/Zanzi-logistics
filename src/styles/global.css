@@ -1,73 +1,61 @@
 /* ════════════════════════════════════════════════════════════
    Zanzi Logistics
-   Design language: "Freight Manifest" — the paperwork that
-   travels with the load. Consignment notes, stencilled crate
-   marks, hazard tape, route diagrams. Red and black only.
-   Oswald (display) / IBM Plex Sans (body) / IBM Plex Mono (data).
+   Design language: taken from the company profile — light and
+   open, brand red on black, angled red tabs that echo the cut
+   angles of the Z, and a receding-road motif from the logo.
+   Oswald (display) / IBM Plex Sans (body) / IBM Plex Mono (labels).
    Full rationale in DESIGN.md.
    ════════════════════════════════════════════════════════════ */
 
 /* ── Tokens ── */
 :root {
-  /* paper */
-  --paper: #f2f1ef;
-  --paper-raised: #fafaf9;
-  --paper-dim: #e4e3e0;
+  /* brand, straight off the logo artwork */
+  --red: #e00014;
+  --black: #0a0b0d;
 
-  /* black */
-  --ink: #121212;
-  --ink-soft: #1c1c1c;
-  --ink-line: #2e2e2e;
+  /* surfaces */
+  --paper: #ffffff;
+  --paper-dim: #f4f5f6;
+  --paper-deep: #eceef0;
 
-  /* muted text on paper */
-  --steel: #56555a;
+  /* ink */
+  --ink: #0a0b0d;
+  --ink-soft: #16181b;
+  --ink-line: #24272b;
 
-  /* the brand red */
-  --red: #d6202b;
-  --red-deep: #a30f18;
-  --red-bright: #ff4d55;
-  --on-red: #fff6f6;
+  /* text */
+  --slate: #5a6068;      /* muted body on light (6.4:1) */
+  --slate-strong: #3d4248;
 
-  /* text on black */
-  --paper-on-ink: #ededeb;
-  --mist-on-ink: #a3a2a0;
+  /* red variants */
+  --red-deep: #b00010;   /* small text + links on light (7.0:1) */
+  --red-bright: #ff2b3d; /* on black (5.5:1) */
+  --on-red: #ffffff;
+
+  /* on black */
+  --paper-on-ink: #f2f3f4;
+  --mist-on-ink: #a2a7ad;
 
   /* hairlines */
-  --rule: rgba(18, 18, 18, 0.18);
-  --rule-faint: rgba(18, 18, 18, 0.1);
-  --rule-strong: rgba(18, 18, 18, 0.42);
-  --rule-on-ink: rgba(237, 237, 235, 0.16);
-  --rule-on-ink-strong: rgba(237, 237, 235, 0.34);
+  --rule: rgba(10, 11, 13, 0.14);
+  --rule-faint: rgba(10, 11, 13, 0.08);
+  --rule-strong: rgba(10, 11, 13, 0.32);
+  --rule-on-ink: rgba(242, 243, 244, 0.16);
+  --rule-on-ink-strong: rgba(242, 243, 244, 0.32);
 
   /* type */
   --font-display: 'Oswald Variable', 'Arial Narrow', Impact, sans-serif;
   --font-sans: 'IBM Plex Sans Variable', 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
 
-  --max-w: 1280px;
+  --max-w: 1240px;
   --gutter: clamp(1.25rem, 4vw, 2.5rem);
-  --nav-h: 70px;
+  --nav-h: 84px;
 
-  --ease-haul: cubic-bezier(0.16, 1, 0.3, 1);
-}
+  /* the angle the whole system is cut on — matches the logo's Z */
+  --skew: -12deg;
 
-/* perceptual refinement where OKLCH is supported */
-@supports (color: oklch(50% 0.1 100)) {
-  :root {
-    --paper: oklch(95.5% 0.002 90);
-    --paper-raised: oklch(98.2% 0.001 90);
-    --paper-dim: oklch(91% 0.003 90);
-    --ink: oklch(17.5% 0 0);
-    --ink-soft: oklch(21% 0 0);
-    --ink-line: oklch(27.5% 0 0);
-    --steel: oklch(45.5% 0.008 300);
-    --red: oklch(54% 0.212 27);
-    --red-deep: oklch(42% 0.185 28);
-    --red-bright: oklch(66% 0.203 24);
-    --on-red: oklch(97.5% 0.008 20);
-    --paper-on-ink: oklch(93.5% 0.002 90);
-    --mist-on-ink: oklch(70% 0.002 90);
-  }
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── Reset ── */
@@ -86,16 +74,14 @@ a { color: inherit; text-decoration: none; }
 button { font: inherit; cursor: pointer; }
 ::selection { background: var(--red); color: var(--on-red); }
 
-/* visible focus, everywhere */
 :focus-visible {
   outline: 2px solid var(--red-deep);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 .ink-section :focus-visible, .site-nav :focus-visible, footer :focus-visible {
   outline-color: var(--red-bright);
 }
 
-/* cross-document page transitions (progressive) */
 @view-transition { navigation: auto; }
 @media (prefers-reduced-motion: reduce) {
   @view-transition { navigation: none; }
@@ -115,11 +101,11 @@ button { font: inherit; cursor: pointer; }
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.7rem 1.1rem;
-  transition: top 0.15s var(--ease-haul);
+  transition: top 0.15s var(--ease-out);
 }
 .skip-link:focus-visible { top: 0.5rem; }
 
-/* ── Layout primitives ── */
+/* ── Layout ── */
 .container {
   max-width: var(--max-w);
   margin: 0 auto;
@@ -129,36 +115,47 @@ button { font: inherit; cursor: pointer; }
 }
 main { position: relative; z-index: 1; }
 
-section { padding: clamp(3.75rem, 8.5vw, 7rem) 0; position: relative; }
+section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; position: relative; }
 section.tight { padding: clamp(2.25rem, 4.5vw, 3.5rem) 0; }
 section.dim { background: var(--paper-dim); }
-section.ink-section {
-  background: var(--ink);
-  color: var(--paper-on-ink);
-}
-section.drench {
-  background: var(--red);
-  color: var(--on-red);
-}
+section.ink-section { background: var(--ink); color: var(--paper-on-ink); }
+section.drench { background: var(--red); color: var(--on-red); }
 
-/* ── Hazard tape ──
-   The signature divider: 45° red/black stripes. Decorative only,
-   always aria-hidden by the markup that uses it. */
-.hazard {
-  height: 8px;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--red) 0 10px,
-    var(--ink) 10px 20px
-  );
+/* ── Road swoosh ──
+   The logo's receding highway, abstracted: a pale diagonal sweep
+   used to stop large light bands reading as empty. Decorative. */
+.swoosh {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
 }
-.hazard-thin { height: 4px; }
-/* on black sections the black stripe would vanish, so invert to paper */
-.ink-section .hazard, footer .hazard, .site-nav .hazard {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    var(--red) 0 10px,
-    var(--ink-line) 10px 20px
+.swoosh::after {
+  content: '';
+  position: absolute;
+  right: -12%;
+  top: -40%;
+  width: 70%;
+  height: 180%;
+  background: linear-gradient(
+    100deg,
+    transparent 0 42%,
+    rgba(10, 11, 13, 0.035) 42% 52%,
+    transparent 52% 60%,
+    rgba(224, 0, 20, 0.05) 60% 66%,
+    transparent 66%
+  );
+  transform: skewX(var(--skew));
+}
+.ink-section .swoosh::after {
+  background: linear-gradient(
+    100deg,
+    transparent 0 42%,
+    rgba(242, 243, 244, 0.05) 42% 52%,
+    transparent 52% 60%,
+    rgba(224, 0, 20, 0.22) 60% 66%,
+    transparent 66%
   );
 }
 
@@ -167,119 +164,71 @@ section.drench {
   font-family: var(--font-display);
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.01em;
-  line-height: 0.92;
+  letter-spacing: 0.005em;
+  line-height: 0.98;
   text-wrap: balance;
 }
-.display em {
-  font-style: normal;
-  color: var(--red);
-}
+.display em { font-style: normal; color: var(--red); }
 .ink-section .display em { color: var(--red-bright); }
-/* on a red band the emphasis goes black — the only other brand colour.
-   3.7:1 against --red, which clears AA for display-size text. */
-.drench .display em { color: var(--ink); }
+.drench .display em { color: var(--black); }
 
-h1.display { font-size: clamp(2.9rem, 8vw, 7rem); }
-h2.display { font-size: clamp(2rem, 4.8vw, 3.5rem); }
-h3 { font-weight: 600; font-size: 1.3rem; line-height: 1.3; letter-spacing: -0.005em; }
+h1.display { font-size: clamp(2.5rem, 6.4vw, 5.4rem); }
+h2.display { font-size: clamp(1.9rem, 4.2vw, 3.2rem); }
+h3 { font-weight: 600; font-size: 1.25rem; line-height: 1.3; }
 
-p { max-width: 66ch; }
+p { max-width: 68ch; }
 
-/* data — the mono manifest voice */
-.data {
+/* the mono label voice */
+.label {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 400;
-  letter-spacing: 0.12em;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--steel);
+  color: var(--slate);
 }
-.data strong { font-weight: 600; color: var(--ink); }
-.ink-section .data { color: var(--mist-on-ink); }
-.ink-section .data strong { color: var(--paper-on-ink); }
-.drench .data { color: var(--on-red); }
-.data-red { color: var(--red-deep); }
-.ink-section .data-red { color: var(--red-bright); }
+.ink-section .label { color: var(--mist-on-ink); }
+.drench .label { color: var(--on-red); }
 
-/* data strip: spaced row of mono labels over a hairline */
-.data-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 2.2rem;
-  padding-bottom: 0.9rem;
-  border-bottom: 1px solid var(--rule);
-}
-.ink-section .data-strip, .drench .data-strip { border-bottom-color: var(--rule-on-ink); }
-.drench .data-strip { border-bottom-color: rgba(18, 18, 18, 0.35); }
-
-/* ── Section mark ──
-   Two red chevrons pointing into the label, then a rule running out
-   to the edge. Directional, because freight moves. No numbering:
-   the only identifiers on this site are ones the business really
-   uses — depot codes (JNB/CPT/DUR) and division codes (FR/WD/XB). */
-.sec-head { margin-bottom: clamp(2.2rem, 5vw, 3.6rem); }
-.sec-mark {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin-bottom: 1.5rem;
-}
-.sec-mark .chev {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-  fill: var(--red);
-}
-.sec-mark .sec-label {
+/* ── Angled red tab ──
+   The profile's section marker: a red parallelogram cut on the
+   same angle as the logo's Z. */
+.tab {
+  display: inline-block;
+  position: relative;
+  background: var(--red);
+  color: var(--on-red);
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ink);
-  white-space: nowrap;
+  padding: 0.55rem 1.5rem 0.55rem 1.1rem;
+  transform: skewX(var(--skew));
+  margin-bottom: 1.6rem;
 }
-.sec-mark::after {
-  content: '';
-  height: 2px;
-  flex: 1;
-  background: var(--red);
-}
-/* the rule runs out to the edge as the section reveals */
-.js .rv .sec-mark::after {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.9s var(--ease-haul) 0.1s;
-}
-.js .rv.in .sec-mark::after { transform: scaleX(1); }
+.tab > span { display: block; transform: skewX(calc(var(--skew) * -1)); }
+.ink-section .tab, .drench .tab { background: var(--red); color: var(--on-red); }
+.drench .tab { background: var(--black); }
 
-.ink-section .sec-mark .sec-label { color: var(--paper-on-ink); }
-.ink-section .sec-mark .chev { fill: var(--red-bright); }
-.drench .sec-mark .sec-label { color: var(--ink); }
-.drench .sec-mark .chev { fill: var(--ink); }
-.drench .sec-mark::after { background: var(--ink); }
-
-/* the chevrons advance slightly when their section arrives */
-.js .rv .sec-mark .chev, .js .rv-group .sec-mark .chev {
-  transform: translateX(-8px);
+/* the tab slides in from the left as its section arrives */
+.js .rv .tab, .js .rv-group .tab {
   opacity: 0;
-  transition: transform 0.5s var(--ease-haul) 0.05s, opacity 0.5s var(--ease-haul) 0.05s;
+  transform: skewX(var(--skew)) translateX(-14px);
+  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
 }
-.js .rv.in .sec-mark .chev, .js .rv-group.in .sec-mark .chev {
-  transform: none;
+.js .rv.in .tab, .js .rv-group.in .tab {
   opacity: 1;
-}
-@media (prefers-reduced-motion: reduce) {
-  .js .rv .sec-mark .chev, .js .rv-group .sec-mark .chev { transform: none; opacity: 1; }
+  transform: skewX(var(--skew));
 }
 
+.sec-head { margin-bottom: clamp(2rem, 4.5vw, 3.2rem); }
 .sec-head .sub {
   margin-top: 1.2rem;
-  font-size: 1.02rem;
-  line-height: 1.75;
-  color: var(--steel);
-  max-width: 60ch;
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--slate);
+  max-width: 62ch;
 }
 .ink-section .sec-head .sub { color: var(--mist-on-ink); }
 .drench .sec-head .sub { color: var(--on-red); }
@@ -289,87 +238,13 @@ p { max-width: 66ch; }
   color: var(--red-deep);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
   font-weight: 500;
 }
 .link:hover { text-decoration-thickness: 2px; }
 .ink-section .link, footer .link { color: var(--red-bright); }
 
-/* ── The Z-route mark ──
-   The logo Z drawn as a route: two runs and a diagonal, with a
-   node at origin and at destination. */
-.zmark { width: 30px; height: 30px; flex-shrink: 0; }
-.zmark .zm-plate { fill: var(--red); }
-.zmark .zm-z {
-  fill: none;
-  stroke: var(--on-red);
-  stroke-width: 2.6;
-  stroke-linecap: square;
-  stroke-linejoin: miter;
-}
-.zmark .zm-node { fill: var(--on-red); }
-
-/* ── Stencil plates ──
-   A bordered mono block, like the ID plate on a container. */
-.plate {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  padding: 0.32rem 0.7rem;
-  border: 2px solid currentColor;
-  color: var(--red-deep);
-  white-space: nowrap;
-}
-.plate-fill {
-  background: var(--red);
-  border-color: var(--red);
-  color: var(--on-red);
-}
-.plate-muted { color: var(--steel); }
-.ink-section .plate { color: var(--red-bright); }
-.ink-section .plate-muted { color: var(--mist-on-ink); }
-.ink-section .plate-fill { color: var(--on-red); }
-
-/* ── Route line ──
-   A rule with square nodes and mono place labels, measuring a real
-   corridor. Used inline in copy blocks and section heads. */
-.route {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink);
-}
-.route .rt-node {
-  width: 9px;
-  height: 9px;
-  background: var(--red);
-  flex-shrink: 0;
-}
-.route .rt-line {
-  flex: 1;
-  height: 2px;
-  background: var(--rule-strong);
-  min-width: 24px;
-  position: relative;
-}
-.js .rv .route .rt-line, .js .rv-group .route .rt-line {
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.7s var(--ease-haul) 0.15s;
-}
-.js .rv.in .route .rt-line, .js .rv-group.in .route .rt-line { transform: scaleX(1); }
-.ink-section .route { color: var(--paper-on-ink); }
-.ink-section .route .rt-line { background: var(--rule-on-ink-strong); }
-
-/* ── Buttons ── */
+/* ── Buttons ──
+   Cut on the brand angle, like the tabs. */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -379,13 +254,14 @@ p { max-width: 66ch; }
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 1rem 1.6rem;
+  padding: 1rem 1.7rem;
   border: 2px solid transparent;
-  border-radius: 0;
+  transform: skewX(var(--skew));
   transition: background 0.18s, color 0.18s, border-color 0.18s;
 }
-.btn .arr { transition: transform 0.18s var(--ease-haul); }
-.btn:hover .arr { transform: translateX(4px); }
+.btn > span, .btn > * { transform: skewX(calc(var(--skew) * -1)); }
+.btn .arr { transition: transform 0.18s var(--ease-out); display: inline-block; }
+.btn:hover .arr { transform: skewX(calc(var(--skew) * -1)) translateX(4px); }
 
 .btn-red { background: var(--red); color: var(--on-red); border-color: var(--red); }
 .btn-red:hover { background: var(--red-deep); border-color: var(--red-deep); }
@@ -394,69 +270,36 @@ p { max-width: 66ch; }
 .btn-ink:hover { background: var(--ink-soft); }
 
 .btn-ghost { border-color: var(--rule-strong); color: var(--ink); background: transparent; }
-.btn-ghost:hover { border-color: var(--ink); background: var(--paper-raised); }
+.btn-ghost:hover { border-color: var(--ink); background: var(--paper-dim); }
 
 .btn-ghost-ink { border-color: var(--rule-on-ink-strong); color: var(--paper-on-ink); background: transparent; }
 .btn-ghost-ink:hover { border-color: var(--paper-on-ink); background: var(--ink-soft); }
 
-.btn-ghost-red { border-color: rgba(18, 18, 18, 0.45); color: var(--on-red); background: transparent; }
-.btn-ghost-red:hover { border-color: var(--on-red); }
+.btn-ghost-red { border-color: rgba(255, 255, 255, 0.55); color: var(--on-red); background: transparent; }
+.btn-ghost-red:hover { border-color: var(--on-red); background: rgba(255, 255, 255, 0.1); }
 
-/* ── Manifest table ──
-   Hairline-ruled, mono headers, a red rule under the header row.
-   Services and lead times are tables here, not card grids. */
-.table-scroll { overflow-x: auto; }
-.manifest {
-  width: 100%;
-  min-width: 640px;
-  border-collapse: collapse;
-}
-.manifest th, .manifest td {
-  text-align: left;
-  vertical-align: top;
-  padding: 1rem 1.2rem;
-  border-bottom: 1px solid var(--rule);
-  font-size: 0.94rem;
-  line-height: 1.55;
-}
-.manifest thead th {
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--ink);
+/* ── Numbered capability item ──
+   The profile's "01 LINEHAUL" treatment: red underlined number,
+   bold black title, short body. */
+.cap-no {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  color: var(--red);
   border-bottom: 2px solid var(--red);
-  padding-bottom: 0.85rem;
+  padding-bottom: 0.1rem;
+  line-height: 1;
 }
-.manifest tbody td { color: var(--steel); }
-.manifest tbody th {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  color: var(--ink);
-  white-space: nowrap;
-}
-.manifest tbody tr:hover td, .manifest tbody tr:hover th { background: var(--paper-raised); }
-.manifest .m-code { color: var(--red-deep); }
-.manifest .m-num { font-family: var(--font-mono); font-size: 0.76rem; white-space: nowrap; color: var(--ink); }
-
-.ink-section .manifest th, .ink-section .manifest td { border-bottom-color: var(--rule-on-ink); }
-.ink-section .manifest thead th { color: var(--paper-on-ink); }
-.ink-section .manifest tbody td { color: var(--mist-on-ink); }
-.ink-section .manifest tbody th { color: var(--paper-on-ink); }
-.ink-section .manifest tbody tr:hover td, .ink-section .manifest tbody tr:hover th { background: var(--ink-soft); }
-.ink-section .manifest .m-code { color: var(--red-bright); }
-.ink-section .manifest .m-num { color: var(--paper-on-ink); }
+.ink-section .cap-no { color: var(--red-bright); border-bottom-color: var(--red-bright); }
 
 /* ── Nav ── */
 .site-nav {
   position: sticky;
   top: 0;
   z-index: 100;
-  background: var(--ink);
-  color: var(--paper-on-ink);
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
 }
 .nav-inner {
   max-width: var(--max-w);
@@ -468,55 +311,39 @@ p { max-width: 66ch; }
   justify-content: space-between;
   gap: 2rem;
 }
-.wordmark { display: inline-flex; align-items: center; gap: 0.75rem; }
-.wordmark .wm-name {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.35rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  line-height: 1;
-}
-.wordmark .wm-sub {
-  font-family: var(--font-mono);
-  font-size: 0.56rem;
-  font-weight: 400;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: var(--mist-on-ink);
-  display: block;
-  margin-top: 0.18rem;
-}
-.wordmark .wm-stack { display: block; }
+.brand { display: inline-flex; align-items: center; }
+.brand img { height: 54px; width: auto; }
 
-.nav-links { display: flex; align-items: center; gap: 1.8rem; }
+.nav-links { display: flex; align-items: center; gap: 2rem; }
 .nav-links a {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  font-weight: 400;
+  font-size: 0.72rem;
+  font-weight: 500;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--mist-on-ink);
+  color: var(--slate-strong);
   transition: color 0.15s;
   position: relative;
 }
-.nav-links a:hover { color: var(--paper-on-ink); }
-.nav-links a.active { color: var(--paper-on-ink); }
+.nav-links a:hover, .nav-links a.active { color: var(--ink); }
 .nav-links a.active::after {
   content: '';
   position: absolute;
-  left: 0; right: 0;
+  left: -2px; right: -2px;
   bottom: -8px;
-  height: 2px;
+  height: 3px;
   background: var(--red);
+  transform: skewX(var(--skew));
 }
 .nav-links .nav-cta {
   background: var(--red);
   color: var(--on-red);
   font-weight: 600;
-  padding: 0.62rem 1.1rem;
+  padding: 0.7rem 1.3rem;
+  transform: skewX(var(--skew));
   transition: background 0.15s;
 }
+.nav-links .nav-cta > span { display: block; transform: skewX(calc(var(--skew) * -1)); }
 .nav-links .nav-cta:hover { background: var(--red-deep); color: var(--on-red); }
 .nav-links .nav-cta.active::after { display: none; }
 
@@ -525,31 +352,31 @@ p { max-width: 66ch; }
   display: none;
   background: none;
   border: none;
-  width: 42px; height: 42px;
+  width: 44px; height: 44px;
   position: relative;
 }
 .nav-toggle span, .nav-toggle span::before, .nav-toggle span::after {
   content: '';
   position: absolute;
-  left: 9px;
-  width: 24px; height: 2px;
-  background: var(--paper-on-ink);
-  transition: transform 0.22s var(--ease-haul), opacity 0.15s;
+  left: 10px;
+  width: 24px; height: 2.5px;
+  background: var(--ink);
+  transition: transform 0.22s var(--ease-out), opacity 0.15s;
 }
-.nav-toggle span { top: 20px; }
+.nav-toggle span { top: 21px; }
 .nav-toggle span::before { left: 0; top: -7px; }
 .nav-toggle span::after { left: 0; top: 7px; }
 .nav-open .nav-toggle span { background: transparent; }
 .nav-open .nav-toggle span::before { transform: translateY(7px) rotate(45deg); }
 .nav-open .nav-toggle span::after { transform: translateY(-7px) rotate(-45deg); }
 
-@media (max-width: 940px) {
+@media (max-width: 960px) {
   .nav-toggle { display: block; }
   .nav-links {
     position: fixed;
-    top: calc(var(--nav-h) + 4px); left: 0; right: 0;
-    background: var(--ink);
-    border-bottom: 2px solid var(--red);
+    top: var(--nav-h); left: 0; right: 0;
+    background: var(--paper);
+    border-bottom: 3px solid var(--red);
     flex-direction: column;
     align-items: stretch;
     gap: 0;
@@ -560,7 +387,7 @@ p { max-width: 66ch; }
   .nav-links a {
     padding: 1rem var(--gutter);
     font-size: 0.82rem;
-    border-bottom: 1px solid var(--rule-on-ink);
+    border-bottom: 1px solid var(--rule-faint);
   }
   .nav-links a.active::after { display: none; }
   .nav-links .nav-cta {
@@ -572,23 +399,18 @@ p { max-width: 66ch; }
   }
 }
 
-/* ── Reveal on scroll ──
-   Freight moves along a line, so reveals translate on X. Hidden
-   states are gated on html.js (set by the layout script) so content
-   stays fully visible without JavaScript; no inline <style> fallback
-   is possible under the strict CSP. */
+/* ── Reveals ── */
 .js .rv {
   opacity: 0;
-  transform: translateX(-18px);
-  transition: opacity 0.5s var(--ease-haul), transform 0.5s var(--ease-haul);
+  transform: translateY(16px);
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
 }
 .js .rv.in { opacity: 1; transform: none; }
 
-/* staggered groups: children reveal in sequence once .in lands */
 .js .rv-group > * {
   opacity: 0;
-  transform: translateX(-18px);
-  transition: opacity 0.5s var(--ease-haul), transform 0.5s var(--ease-haul);
+  transform: translateY(16px);
+  transition: opacity 0.55s var(--ease-out), transform 0.55s var(--ease-out);
 }
 .js .rv-group.in > * { opacity: 1; transform: none; }
 .js .rv-group.in > :nth-child(2) { transition-delay: 70ms; }
@@ -598,25 +420,24 @@ p { max-width: 66ch; }
 .js .rv-group.in > :nth-child(6) { transition-delay: 350ms; }
 .js .rv-group.in > :nth-child(n+7) { transition-delay: 420ms; }
 
-/* hero load-in (no scroll needed) */
 .hero-stack > * {
   opacity: 0;
-  transform: translateX(-20px);
-  animation: haulIn 0.7s var(--ease-haul) forwards;
+  transform: translateY(18px);
+  animation: riseIn 0.75s var(--ease-out) forwards;
 }
 .hero-stack > :nth-child(1) { animation-delay: 0.05s; }
-.hero-stack > :nth-child(2) { animation-delay: 0.14s; }
-.hero-stack > :nth-child(3) { animation-delay: 0.23s; }
-.hero-stack > :nth-child(4) { animation-delay: 0.32s; }
-.hero-stack > :nth-child(5) { animation-delay: 0.41s; }
-.hero-stack > :nth-child(n+6) { animation-delay: 0.5s; }
-@keyframes haulIn { to { opacity: 1; transform: none; } }
+.hero-stack > :nth-child(2) { animation-delay: 0.15s; }
+.hero-stack > :nth-child(3) { animation-delay: 0.25s; }
+.hero-stack > :nth-child(4) { animation-delay: 0.35s; }
+.hero-stack > :nth-child(n+5) { animation-delay: 0.45s; }
+@keyframes riseIn { to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js .rv, .js .rv-group > *, .hero-stack > * {
     opacity: 1; transform: none; transition: none; animation: none;
   }
+  .js .rv .tab, .js .rv-group .tab { opacity: 1; transform: skewX(var(--skew)); }
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-delay: 0s !important;
@@ -629,23 +450,23 @@ p { max-width: 66ch; }
 .field { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.3rem; }
 .field label {
   font-family: var(--font-mono);
-  font-size: 0.64rem;
+  font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
 }
-.field label .opt { font-weight: 400; color: var(--steel); }
+.field label .opt { font-weight: 400; color: var(--slate); }
 .field input,
 .field select,
 .field textarea {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 0.96rem;
   color: var(--ink);
-  background: var(--paper-raised);
+  background: var(--paper);
   border: 1px solid var(--rule-strong);
   border-radius: 0;
-  padding: 0.85rem 1rem;
+  padding: 0.9rem 1rem;
   width: 100%;
   outline: none;
   transition: border-color 0.15s;
@@ -653,11 +474,11 @@ p { max-width: 66ch; }
 .field input:focus-visible,
 .field select:focus-visible,
 .field textarea:focus-visible {
-  border-color: var(--red-deep);
+  border-color: var(--red);
   outline: 2px solid var(--red-deep);
   outline-offset: 0;
 }
-.field ::placeholder { color: var(--steel); opacity: 0.8; }
+.field ::placeholder { color: var(--slate); opacity: 0.75; }
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.2rem; }
 @media (max-width: 640px) { .form-row { grid-template-columns: 1fr; } }
 
@@ -665,28 +486,30 @@ p { max-width: 66ch; }
 .page-hero {
   background: var(--ink);
   color: var(--paper-on-ink);
-  padding: clamp(2.75rem, 6vw, 4.5rem) 0 clamp(2.75rem, 6vw, 4.5rem);
+  padding: clamp(3rem, 6.5vw, 5rem) 0;
+  position: relative;
+  overflow: hidden;
 }
-.page-hero .data-strip { border-bottom-color: var(--rule-on-ink); }
-.page-hero .data { color: var(--mist-on-ink); }
-.page-hero .data strong { color: var(--paper-on-ink); }
-.page-hero h1 { margin-top: clamp(1.5rem, 3.5vw, 2.2rem); }
+.page-hero .label { color: var(--mist-on-ink); }
+.page-hero h1 { margin-top: 0.5rem; }
 .page-hero .display em { color: var(--red-bright); }
 .page-sub {
   margin-top: 1.5rem;
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   line-height: 1.8;
   color: var(--mist-on-ink);
-  max-width: 56ch;
+  max-width: 58ch;
 }
 
-/* ── Footer: the consignment manifest block ── */
+/* ── Footer ── */
 footer {
   background: var(--ink);
   color: var(--paper-on-ink);
   position: relative;
   z-index: 1;
 }
+/* the red angle that runs across the profile's footer */
+.footer-rule { height: 5px; background: var(--red); }
 .footer-inner {
   max-width: var(--max-w);
   margin: 0 auto;
@@ -694,45 +517,31 @@ footer {
 }
 .footer-top {
   display: grid;
-  grid-template-columns: 1.7fr 1fr 1fr 1fr;
-  gap: 2.5rem;
+  grid-template-columns: 1.6fr 1fr 1fr;
+  gap: 2.5rem 3rem;
   padding-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
+.footer-brand img { height: 72px; width: auto; margin-bottom: 1.4rem; }
 .footer-brand p {
-  font-size: 0.92rem;
-  line-height: 1.7;
-  max-width: 40ch;
-  margin-top: 1.2rem;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 38ch;
   color: var(--mist-on-ink);
 }
-.footer-contact {
-  margin-top: 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-.footer-contact a {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  color: var(--paper-on-ink);
-  transition: color 0.15s;
-}
-.footer-contact a:hover { color: var(--red-bright); }
 .footer-col h4 {
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.64rem;
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--red-bright);
   margin-bottom: 1.2rem;
 }
-.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
-.footer-col a { font-size: 0.9rem; color: var(--mist-on-ink); transition: color 0.15s; }
+.footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+.footer-col a, .footer-col li { font-size: 0.92rem; color: var(--mist-on-ink); transition: color 0.15s; }
 .footer-col a:hover { color: var(--paper-on-ink); }
+.footer-col .fc-strong { color: var(--paper-on-ink); font-weight: 500; }
 
-/* the footer ends on a plain legal line — no title block, no sheet number */
 .footer-legal {
   padding: 1.4rem 0 2.2rem;
   border-top: 1px solid var(--rule-on-ink);
@@ -741,51 +550,12 @@ footer {
   flex-wrap: wrap;
   gap: 0.6rem 2rem;
 }
+.footer-legal .label { font-size: 0.66rem; letter-spacing: 0.1em; }
 
-/* ── Depot strip ──
-   Opens the footer with the three depots and the 24/7 desk: real
-   operational information rather than a document header. */
-.depot-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1px;
-  background: var(--rule-on-ink);
-  border: 1px solid var(--rule-on-ink);
-  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
-}
-.ds-item {
-  background: var(--ink);
-  padding: 1.1rem 1.2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-  min-width: 0;
-}
-.ds-code {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 1.5rem;
-  line-height: 1;
-  letter-spacing: 0.05em;
-  color: var(--red-bright);
-}
-.ds-city { font-weight: 600; font-size: 0.94rem; }
-.ds-item .data { line-height: 1.5; }
-.ds-item a {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--paper-on-ink);
-  transition: color 0.15s;
-}
-.ds-item a:hover { color: var(--red-bright); }
-
-@media (max-width: 940px) {
-  .footer-top { grid-template-columns: 1fr 1fr; gap: 2.25rem; }
+@media (max-width: 900px) {
+  .footer-top { grid-template-columns: 1fr 1fr; }
   .footer-brand { grid-column: 1 / -1; }
-  .depot-strip { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 600px) {
   .footer-top { grid-template-columns: 1fr; }
-  .depot-strip { grid-template-columns: 1fr; }
 }

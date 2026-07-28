@@ -4,7 +4,7 @@ import '@fontsource-variable/ibm-plex-sans/wght.css';
 import '@fontsource/ibm-plex-mono/400.css';
 import '@fontsource/ibm-plex-mono/600.css';
 import '../styles/global.css';
-import { company, contact, hubs, divisions } from '../data/company';
+import { company, contact, capabilities } from '../data/company';
 
 interface Props {
   title: string;
@@ -13,7 +13,7 @@ interface Props {
 
 const {
   title,
-  description = 'Zanzi Logistics moves road freight, warehousing and cross-border cargo across South Africa and into the SADC region. FTL and LTL, 3PL warehousing, customs clearing and international forwarding.',
+  description = 'Zanzi Logistics takes responsibility for the operational challenges between your business and its growth. Linehaul, same-day express, cross-border, dedicated freight, project logistics, healthcare logistics and warehousing across Southern Africa.',
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -21,22 +21,20 @@ const path = Astro.url.pathname;
 const isActive = (href: string) =>
   href === '/' ? path === '/' : path.startsWith(href);
 const year = new Date().getFullYear();
-const hq = hubs.find((h) => h.primary) ?? hubs[0];
 
 const schema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: company.name,
-  legalName: company.legalName,
-  description:
-    'Road freight, third-party warehousing and distribution, and cross-border and customs clearing across South Africa and the SADC region.',
+  slogan: company.promise,
+  description: company.intro,
   url: Astro.site?.toString(),
+  logo: new URL('/logo/zanzi-logistics.png', Astro.site).toString(),
   telephone: contact.phone,
   email: contact.email,
   address: {
     '@type': 'PostalAddress',
-    addressLocality: hq.city,
-    addressRegion: 'Gauteng',
+    addressLocality: 'Johannesburg',
     addressCountry: 'ZA',
   },
   areaServed: [
@@ -45,10 +43,10 @@ const schema = {
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Logistics services',
-    itemListElement: divisions.map((d) => ({
+    name: 'Logistics capabilities',
+    itemListElement: capabilities.map((c) => ({
       '@type': 'Offer',
-      itemOffered: { '@type': 'Service', name: d.name, description: d.short },
+      itemOffered: { '@type': 'Service', name: c.name, description: c.short },
     })),
   },
 };
@@ -59,13 +57,14 @@ const schema = {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content={description} />
-  <meta name="theme-color" content="#121212" />
+  <meta name="theme-color" content="#e00014" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonicalURL} />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content={company.name} />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content={new URL('/logo/zanzi-logistics.png', Astro.site)} />
+  <meta name="twitter:card" content="summary" />
   <link rel="canonical" href={canonicalURL} />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="sitemap" href="/sitemap-index.xml" />
@@ -78,17 +77,8 @@ const schema = {
 
   <nav class="site-nav" id="site-nav" aria-label="Main">
     <div class="nav-inner">
-      <a href="/" class="wordmark" aria-label={`${company.name}, home`}>
-        <svg class="zmark" viewBox="0 0 32 32" aria-hidden="true">
-          <rect class="zm-plate" x="0" y="0" width="32" height="32" />
-          <path class="zm-z" d="M9 10 H23 L9 22 H23" />
-          <circle class="zm-node" cx="9" cy="10" r="2.4" />
-          <circle class="zm-node" cx="23" cy="22" r="2.4" />
-        </svg>
-        <span class="wm-stack">
-          <span class="wm-name">Zanzi</span>
-          <span class="wm-sub">Logistics</span>
-        </span>
+      <a href="/" class="brand" aria-label={`${company.name}, home`}>
+        <img src="/logo/zanzi-logistics.svg" alt={company.name} width="186" height="125" />
       </a>
 
       <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
@@ -96,13 +86,12 @@ const schema = {
       </button>
 
       <div class="nav-links">
-        <a href="/services" class={isActive('/services') ? 'active' : ''}>Services</a>
-        <a href="/network" class={isActive('/network') ? 'active' : ''}>Network</a>
-        <a href="/about" class={isActive('/about') ? 'active' : ''}>Company</a>
-        <a href="/contact" class={`nav-cta ${isActive('/contact') ? 'active' : ''}`}>Get a quote</a>
+        <a href="/services" class={isActive('/services') ? 'active' : ''}>Capabilities</a>
+        <a href="/network" class={isActive('/network') ? 'active' : ''}>Coverage</a>
+        <a href="/about" class={isActive('/about') ? 'active' : ''}>About</a>
+        <a href="/contact" class={`nav-cta ${isActive('/contact') ? 'active' : ''}`}><span>Let’s Talk</span></a>
       </div>
     </div>
-    <div class="hazard hazard-thin" aria-hidden="true"></div>
   </nav>
 
   <main id="main">
@@ -110,82 +99,38 @@ const schema = {
   </main>
 
   <footer>
-    <div class="hazard" aria-hidden="true"></div>
+    <div class="footer-rule"></div>
     <div class="footer-inner">
-      <div class="depot-strip">
-        {hubs.map((h) => (
-          <div class="ds-item">
-            <span class="ds-code">{h.code}</span>
-            <span class="ds-city">{h.city}</span>
-            <span class="data">{h.address}</span>
-          </div>
-        ))}
-        <div class="ds-item">
-          <span class="ds-code">24/7</span>
-          <span class="ds-city">Operations desk</span>
-          <a href={contact.opsPhoneHref}>{contact.opsPhone}</a>
-        </div>
-      </div>
-
       <div class="footer-top">
         <div class="footer-brand">
-          <a href="/" class="wordmark">
-            <svg class="zmark" viewBox="0 0 32 32" aria-hidden="true">
-              <rect class="zm-plate" x="0" y="0" width="32" height="32" />
-              <path class="zm-z" d="M9 10 H23 L9 22 H23" />
-              <circle class="zm-node" cx="9" cy="10" r="2.4" />
-              <circle class="zm-node" cx="23" cy="22" r="2.4" />
-            </svg>
-            <span class="wm-stack">
-              <span class="wm-name">Zanzi</span>
-              <span class="wm-sub">Logistics</span>
-            </span>
-          </a>
-          <p>
-            Road freight, warehousing and cross-border cargo, moved across South
-            Africa and into the SADC region. One controller, one waybill, one
-            number to call.
-          </p>
-          <div class="footer-contact">
-            <a href={contact.phoneHref}>{contact.phone}</a>
-            <a href={`mailto:${contact.email}`}>{contact.email}</a>
-          </div>
+          <img src="/logo/zanzi-logistics-on-dark.svg" alt={company.name} width="186" height="125" />
+          <p>{company.promise}</p>
         </div>
 
         <div class="footer-col">
-          <h4>Services</h4>
+          <h4>Capabilities</h4>
           <ul>
-            <li><a href="/services#road-freight">Road freight</a></li>
-            <li><a href="/services#warehousing">Warehousing &amp; 3PL</a></li>
-            <li><a href="/services#cross-border">Cross-border</a></li>
-            <li><a href="/services#cross-border">Customs clearing</a></li>
+            {capabilities.map((c) => (
+              <li><a href={`/services#${c.slug}`}>{c.name}</a></li>
+            ))}
           </ul>
         </div>
 
         <div class="footer-col">
-          <h4>Network</h4>
+          <h4>Get in touch</h4>
           <ul>
-            <li><a href="/network#depots">Depots</a></li>
-            <li><a href="/network#lanes">Lead times</a></li>
-            <li><a href="/network#corridors">Cross-border</a></li>
-            <li><a href="/network#international">International</a></li>
-          </ul>
-        </div>
-
-        <div class="footer-col">
-          <h4>Company</h4>
-          <ul>
-            <li><a href="/about">About Zanzi</a></li>
-            <li><a href="/about#commitments">How we operate</a></li>
-            <li><a href="/about#compliance">Compliance</a></li>
-            <li><a href="/contact">Get a quote</a></li>
+            <li><a href={contact.phoneHref} class="fc-strong">{contact.phone}</a></li>
+            <li><a href={contact.phoneAltHref} class="fc-strong">{contact.phoneAlt}</a></li>
+            <li><a href={`mailto:${contact.email}`}>{contact.email}</a></li>
+            <li>{contact.office}</li>
+            <li>{contact.hours}</li>
           </ul>
         </div>
       </div>
 
       <div class="footer-legal">
-        <span class="data">&copy; {year} {company.legalName} &middot; Reg {company.regNo}</span>
-        <span class="data">{hq.city} &middot; South Africa</span>
+        <span class="label">&copy; {year} {company.legalName}</span>
+        <span class="label">ISO 9001 &middot; ISO 13485 &middot; ISO 45001</span>
       </div>
     </div>
   </footer>
