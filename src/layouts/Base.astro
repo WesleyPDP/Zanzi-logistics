@@ -66,7 +66,8 @@ const schema = {
   <meta property="og:image" content={new URL('/logo/zanzi-logistics.png', Astro.site)} />
   <meta name="twitter:card" content="summary" />
   <link rel="canonical" href={canonicalURL} />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <!-- ?v= busts the aggressive favicon cache when the mark changes -->
+  <link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
   <link rel="sitemap" href="/sitemap-index.xml" />
   <title>{title}</title>
   <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

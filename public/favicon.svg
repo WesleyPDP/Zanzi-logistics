@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <rect width="32" height="32" fill="#0a0b0d"/>
-  <path d="M7 4h20l-4 6H14l9 2-16 16 5-12H5z" fill="#e00014"/>
+  <!-- the brand Z: sharp angular cuts, leaning forward like the logo -->
+  <path fill="#e00014" d="M7.6 4 L30 4 L29 9.6 L12.4 24.4 L27 24.4 L26 30 L2.5 30 L3.5 24.4 L20.1 9.6 L6.6 9.6 Z"/>
 </svg>

@@ -42,14 +42,16 @@ import { contact, capabilities, expectations } from '../data/company';
         <form id="contact-form" class="intake">
           <input type="checkbox" name="botcheck" id="botcheck" class="hp-field" tabindex="-1" autocomplete="off" />
 
+          <p class="form-legend">About you</p>
+
           <div class="form-row">
             <div class="field">
               <label for="name">Full Name</label>
               <input type="text" id="name" name="name" placeholder="Your name" required maxlength="80" autocomplete="name" />
             </div>
             <div class="field">
-              <label for="company">Company Name</label>
-              <input type="text" id="company" name="company" placeholder="Your business" required maxlength="120" autocomplete="organization" />
+              <label for="company">Company Name <span class="opt">&middot; optional</span></label>
+              <input type="text" id="company" name="company" placeholder="Your business" maxlength="120" autocomplete="organization" />
             </div>
           </div>
 
@@ -64,21 +66,70 @@ import { contact, capabilities, expectations } from '../data/company';
             </div>
           </div>
 
+          <p class="form-legend">
+            Your freight
+            <span class="legend-note">
+              All optional &mdash; but the more you can tell us, the faster we
+              can come back with something useful.
+            </span>
+          </p>
+
           <div class="field">
-            <label for="service">Service Required</label>
-            <select id="service" name="service" required>
+            <label for="service">Service Required <span class="opt">&middot; optional</span></label>
+            <select id="service" name="service">
               <option value="">Select a service&hellip;</option>
               {capabilities.map((c) => <option>{c.name}</option>)}
               <option>Not sure yet &mdash; please advise</option>
             </select>
           </div>
 
+          <div class="form-row">
+            <div class="field">
+              <label for="origin">Collection From <span class="opt">&middot; optional</span></label>
+              <input type="text" id="origin" name="origin" placeholder="Town or suburb, province" maxlength="120" />
+            </div>
+            <div class="field">
+              <label for="destination">Delivery To <span class="opt">&middot; optional</span></label>
+              <input type="text" id="destination" name="destination" placeholder="Town or suburb, province or country" maxlength="120" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="cargo">What Is The Freight? <span class="opt">&middot; optional</span></label>
+              <input type="text" id="cargo" name="cargo" placeholder="e.g. palletised dry goods" maxlength="140" />
+            </div>
+            <div class="field">
+              <label for="weight">Mass / Pallets <span class="opt">&middot; optional</span></label>
+              <input type="text" id="weight" name="weight" placeholder="e.g. 3 200 kg, 6 pallets" maxlength="80" />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="ready">Ready For Collection <span class="opt">&middot; optional</span></label>
+              <input type="date" id="ready" name="ready" />
+            </div>
+            <div class="field">
+              <label for="frequency">How Often? <span class="opt">&middot; optional</span></label>
+              <select id="frequency" name="frequency">
+                <option value="">Select&hellip;</option>
+                <option>One-off shipment</option>
+                <option>A few times a month</option>
+                <option>Weekly</option>
+                <option>Daily / ongoing contract</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="form-legend">Anything else</p>
+
           <div class="field">
-            <label for="message">Tell us about your requirements</label>
+            <label for="message">Tell Us About Your Requirements</label>
             <textarea
               id="message"
               name="message"
-              rows="6"
+              rows="5"
               maxlength="2000"
               required
               placeholder="What you’re trying to achieve, or the challenge you’re facing."
@@ -204,6 +255,35 @@ import { contact, capabilities, expectations } from '../data/company';
     line-height: 1.8;
     color: var(--slate);
     max-width: 58ch;
+  }
+
+  /* Group headings. Only name, email, phone and the requirements box are
+     required — everything under "Your freight" just speeds up the reply. */
+  .form-legend {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink);
+    padding-bottom: 0.7rem;
+    margin-bottom: 1.4rem;
+    border-bottom: 2px solid var(--red);
+    /* it is a <p>, so the global 68ch measure would stop the rule short */
+    max-width: none;
+  }
+  .form-legend:not(:first-of-type) { margin-top: 1rem; }
+  .legend-note {
+    display: block;
+    margin-top: 0.6rem;
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.6;
+    color: var(--slate);
+    max-width: 52ch;
   }
 
   /* honeypot: off-screen, never reachable by keyboard */
