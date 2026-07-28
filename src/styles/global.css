@@ -312,7 +312,8 @@ p { max-width: 68ch; }
   gap: 2rem;
 }
 .brand { display: inline-flex; align-items: center; }
-.brand img { height: 54px; width: auto; }
+.brand img { height: 62px; width: auto; }
+@media (max-width: 480px) { .brand img { height: 52px; } }
 
 .nav-links { display: flex; align-items: center; gap: 2rem; }
 .nav-links a {

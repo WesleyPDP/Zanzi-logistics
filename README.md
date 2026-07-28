@@ -1,98 +1,90 @@
 # Zanzi Logistics
 
-Company website for **Zanzi Logistics** — road freight, third-party
-warehousing and distribution, and cross-border and customs clearing across
-South Africa and the SADC region. Built with [Astro](https://astro.build) as a
-fully static site, deployed to Cloudflare Pages.
+Marketing site for **Zanzi Logistics** — a Johannesburg-based logistics partner
+offering linehaul, same-day express, cross-border, dedicated freight, project
+logistics, healthcare logistics and warehousing across Southern Africa. Built
+with [Astro](https://astro.build) as a fully static site, deployed to
+Cloudflare Pages.
 
----
+> **We don't just carry freight. We carry responsibility.**
 
-## ⚠️ Before this goes live
+## Where the content comes from
 
-Every business fact on this site lives in **[`src/data/company.ts`](src/data/company.ts)**
-and a lot of it is **invented placeholder content**. Nothing else in the
-codebase hard-codes a phone number, address, lead time or statistic — edit
-that one file and the whole site updates.
+All copy and design direction come from the client marketing pack, kept in
+`Marketings input/` locally. That folder is **gitignored** — the source
+documents live with marketing, not in this repo:
 
-Search the file for `PLACEHOLDER`. At minimum, replace:
+| File | What it drives |
+|---|---|
+| `Zanzi Logistics Website Copy.docx` | Every word on the site — home, about, services, contact |
+| `Zanzi Company Profile.pdf` | The visual language: light theme, red angled tabs, numbered capabilities, dark footer |
+| `Logo-exports/` | The logo, and the brand colours `#e00014` / `#0a0b0d` |
 
-| What | Where | Currently |
-|---|---|---|
-| Phone numbers | `contact.phone`, `contact.opsPhone` | `+27 11 000 0000` / `0001` |
-| Email addresses | `contact.email`, `contact.quotesEmail` | `@zanzilogistics.co.za` |
-| Registration & VAT numbers | `company.regNo`, `company.vatNo` | zeroes |
-| Year founded | `company.founded` | `2019` |
-| Depot addresses | `hubs[].address` | suburb only, no street |
-| Headline statistics | `stats` | depot/province/corridor counts |
-| Lane distances & transit times | `lanes` | indicative only |
-| Cross-border transit times | `corridors` | border posts real, times indicative |
-| Compliance claims | `compliance` | **publish only what you actually hold** |
+The logo files the site actually serves are committed, in
+[`public/logo/`](public/logo/). The approved copy is transcribed into
+[`src/data/company.ts`](src/data/company.ts) — capabilities, certifications,
+values, contact details and the "what you can expect" points all live there.
+**Edit that file rather than the pages**, and keep it in step with the source
+documents.
 
-The marketing copy on `/about` (company story) is written to a plausible
-positioning but has not been approved by anyone at the business — read it
-before launch and make it true.
-
-The site is also not connected to an inbox yet. See
-[Quote form](#quote-form) below.
-
----
+`Content.md` in that folder was a set of meeting notes, not a brief, and does
+not describe the site.
 
 ## Pages
 
 | Route | Purpose |
 |---|---|
-| `/` | Hero, capability strip, three divisions, operating cycle, network snapshot, commitments, CTA |
-| `/services` | The three divisions in full, equipment table, what we need to quote |
-| `/network` | Depots, the network map, domestic lead times, SADC corridors, international forwarding |
-| `/about` | The company, operating commitments, cover and compliance, registration details |
-| `/contact` | Freight enquiry form, contact lines, depot list |
+| `/` | Hero, "every shipment carries more than freight", Quiet Ownership, capabilities, ISO standards, why Zanzi, CTA |
+| `/services` | All seven capabilities in full, plus Certified for Confidence |
+| `/network` | Coverage: the map, national reach, cross-border crossings |
+| `/about` | Our belief, the promise, what partnership looks like, our values |
+| `/contact` | Enquiry form, "prefer to talk?" details, what you can expect |
 | `/404` | Not found |
 
-Redirects are configured in `astro.config.mjs`: `/quote` → `/contact`,
-`/coverage` → `/network`, `/freight` → `/services`.
+Nav labels are Capabilities / Coverage / About / Let's Talk. Redirects in
+`astro.config.mjs`: `/quote` → `/contact`, `/coverage` → `/network`,
+`/freight` → `/services`.
 
-## What the company does
+## Capabilities
 
-Three divisions, all run in-house rather than subcontracted:
+Seven, numbered as in the company profile:
 
-- **Road freight (FR)** — full truckload, part load / groupage, containerised
-  haulage, abnormal and flatbed, dedicated contract fleet.
-- **Warehousing & distribution (WD)** — racked and bulk storage, pick / pack /
-  dispatch, inventory management, cross-docking, retail DC delivery, returns.
-- **Cross-border & customs (XB)** — SADC overland, customs clearing, bonded
-  movement, documentation, international sea and air forwarding.
+`01` Linehaul · `02` Same-Day Express · `03` Cross-Border · `04` Dedicated
+Freight · `05` Project Logistics · `06` Healthcare Logistics · `07` Warehousing
 
-Coverage: South Africa nationwide, SADC overland corridors, and international
-import/export by sea and air.
+> Note on numbering: the profile lists six capabilities and names `06` *Medical
+> Transport*; the website copy calls the same service *Healthcare Logistics*
+> and adds *Warehousing*, which the profile mentions in prose. The site carries
+> all seven under the website-copy names.
+
+## Certifications
+
+The site publishes ISO 9001:2015, ISO 13485:2016 and ISO 45001:2018, confirmed
+by the client as genuinely held. These are **verifiable claims** — do not add
+to `certifications` in `company.ts` without a current certificate behind it.
 
 ## Design language
 
-**"Freight Manifest"** — the paperwork that travels with the load. Consignment
-notes, stencilled crate marks, hazard tape, route diagrams and manifest
-tables. **Red and black only** (`#d6202b` / `#121212`), from the logo; red is
-the site's one chromatic colour and is always load-bearing. Black bands and
-paper bands alternate down every page.
+Taken from the company profile: light theme, heavy condensed Oswald display,
+and everything that can be cut is cut on the logo's `-12deg` angle — tabs,
+buttons, the nav's active underline. Red `#e00014` is the only chromatic
+colour. Full rationale, the colour contrast table and the accessibility
+contract are in **[DESIGN.md](DESIGN.md)**; tokens live in
+`src/styles/global.css`.
 
-Type is Oswald (display), IBM Plex Sans (body) and IBM Plex Mono (all
-codes, labels and table headers), all self-hosted via Fontsource.
-Full rationale and the accessibility contract are in **[DESIGN.md](DESIGN.md)**;
-tokens live in `src/styles/global.css`.
-
-**No page, sheet, figure or form numbers anywhere.** Sections are marked with
-red chevrons (`src/components/SecMark.astro`) and the only identifiers on the
-site are ones the business really uses — depot codes (JNB/CPT/DUR), division
-codes (FR/WD/XB) and service refs (FR-01, WD-02).
-
-### The network map
+### The map
 
 `/network` carries a map of South Africa drawn from real longitude/latitude in
 [`src/data/geo.ts`](src/data/geo.ts) and projected at build time — no
-hand-placed coordinates, so the shape stays correct if the viewBox changes.
-Edit the `mapDepots`, `mapCities`, `mapBorders` and `mapRoutes` arrays to
-change what is plotted; `dx`/`dy`/`anchor` position each label. It is a static
-illustration with no interactivity.
+hand-placed coordinates. It shows hub-and-spoke from the single Johannesburg
+base. Edit `mapDepots`, `mapCities`, `mapBorders` and `mapRoutes` to change
+what is plotted; `dx`/`dy`/`anchor` position each label. Static, no
+interactivity.
 
-## Quote form
+No transit times or distances are published anywhere on the site — they depend
+on the consignment and the paperwork, and the page says so.
+
+## Contact form
 
 `/contact` posts to [Web3Forms](https://web3forms.com). Set the access key:
 
@@ -104,9 +96,10 @@ cp .env.example .env
 On Cloudflare Pages, set `PUBLIC_WEB3FORMS_ACCESS_KEY` as a build environment
 variable too — it is inlined at build time, not read at runtime.
 
-**If the key is unset the form still renders, but on submit it tells the
-visitor to email `quotes@` directly** rather than silently swallowing the
-enquiry. That is deliberate, but it is not a substitute for setting the key.
+**Until the key is set the form still renders, but on submit it tells the
+visitor to email `info@zanzilogistics.co.za` directly** rather than silently
+swallowing the enquiry. That is deliberate, but it is not a substitute for
+setting the key.
 
 The key is public by design (it ends up in the client bundle either way).
 Abuse is mitigated by the honeypot field and the allowed-domains setting in
@@ -118,11 +111,11 @@ the Web3Forms dashboard.
   `default-src 'none'` CSP with explicit allowances, HSTS, `frame-ancestors
   'none'`, `nosniff`, COOP/CORP.
 - No third-party scripts anywhere; fonts self-hosted; the only external call
-  is the quote-form POST to `api.web3forms.com`.
+  is the contact-form POST to `api.web3forms.com`.
 - Scripts and styles are always emitted as external files
   (`inlineStylesheets: 'never'`, `assetsInlineLimit: 0`) so the CSP needs no
   `unsafe-inline`.
-- Quote form: honeypot field, maxlengths on every input, explicit consent
+- Contact form: honeypot field, maxlengths on every input, explicit consent
   checkbox.
 - `npm audit`: 0 vulnerabilities.
 

@@ -337,16 +337,17 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
   }
   @media (max-width: 880px) { .split { grid-template-columns: 1fr; } }
 
+  /* box-shadow rings rather than a container background, so an odd item
+     count never leaves an empty grey cell in the last row */
   .centre-list {
     list-style: none;
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
   }
   .centre-list li {
     background: var(--paper);
+    box-shadow: 0 0 0 1px var(--rule);
     padding: 0.95rem 1.1rem;
     font-family: var(--font-mono);
     font-size: 0.82rem;
@@ -366,11 +367,10 @@ const borderLegs = mapRoutes.crossBorder.map(leg);
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
   }
   .cross {
     background: var(--paper);
+    box-shadow: 0 0 0 1px var(--rule);
     padding: 1.4rem 1.5rem;
     display: flex;
     flex-direction: column;

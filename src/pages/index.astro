@@ -247,15 +247,18 @@ import { capabilities, certifications, whyZanzi } from '../data/company';
   }
 
   /* ── Capabilities ── */
+  /* Hairlines come from a box-shadow ring on each card rather than a
+     container background showing through the gaps — 7 capabilities never
+     fill a 3- or 2-column grid, and a container background would leave
+     empty grey cells in the last row. Shadows also cost no layout. */
   .cap-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 1px;
-    background: var(--rule);
-    border: 1px solid var(--rule);
   }
   .cap {
     background: var(--paper);
+    box-shadow: 0 0 0 1px var(--rule);
     padding: clamp(1.5rem, 3vw, 2.1rem);
     display: flex;
     flex-direction: column;
