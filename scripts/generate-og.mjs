@@ -22,8 +22,18 @@ const MONO = font('@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-norma
 const LOGO = pathToFileURL(join(root, 'public/logo/zanzi-logistics-on-dark.svg')).href;
 const ICON = pathToFileURL(join(root, 'public/favicon.svg')).href;
 
-const CAPABILITIES =
-  'Linehaul · Same-Day Express · Cross-Border · Dedicated Freight · Project Logistics · Healthcare Logistics · Warehousing';
+/*
+ * Layout note: WhatsApp (and several other chat clients) centre-crop a
+ * 1.91:1 card towards square in the preview bubble. So the composition is
+ * CENTRED and everything meaningful is kept inside a ~700px-wide safe zone,
+ * which survives a 630×630 centre crop. That is why this card is centred
+ * while the site itself is left-aligned — a share card that gets cropped is
+ * worth more than one that matches the page exactly.
+ *
+ * Type is also deliberately large: these previews are often read at
+ * thumbnail size on a phone.
+ */
+const SAFE = 760; // px — keep all content within this centred column
 
 const html = `<!doctype html><meta charset="utf-8"><style>
   @font-face { font-family: Oswald; src: url("${OSWALD}") format("woff2"); font-weight: 200 700; }
@@ -31,53 +41,57 @@ const html = `<!doctype html><meta charset="utf-8"><style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { width: 1200px; height: 630px; background: #0a0b0d; overflow: hidden; position: relative; }
 
-  /* the road swoosh, cut on the logo's angle */
+  /* the road swoosh, cut on the logo's angle — kept to the outer thirds so
+     it never sits behind the type */
   .sweep {
-    position: absolute; inset: -20% -30% -20% 40%;
+    position: absolute; inset: -20% -30% -20% 46%;
     background: linear-gradient(100deg,
       transparent 0 38%,
-      rgba(242,243,244,.055) 38% 49%,
-      transparent 49% 57%,
-      rgba(224,0,20,.30) 57% 64%,
-      transparent 64%);
+      rgba(242,243,244,.05) 38% 49%,
+      transparent 49% 58%,
+      rgba(224,0,20,.26) 58% 65%,
+      transparent 65%);
     transform: skewX(-12deg);
   }
-  .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 12px; background: #e00014; }
+  .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 14px; background: #e00014; }
 
   .inner {
-    position: relative; padding: 72px 80px; height: 100%;
-    display: flex; flex-direction: column; align-items: flex-start;
+    position: relative; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 48px 40px 62px;
   }
-  .logo { height: 104px; width: auto; }
+  .logo { height: 96px; width: auto; }
 
+  .kicker {
+    margin-top: 30px;
+    font-family: Oswald, sans-serif; font-weight: 500; text-transform: uppercase;
+    font-size: 34px; line-height: 1; letter-spacing: .02em; color: #a2a7ad;
+    max-width: ${SAFE}px;
+  }
   h1 {
+    margin-top: 14px;
     font-family: Oswald, sans-serif; font-weight: 700; text-transform: uppercase;
-    font-size: 84px; line-height: 0.98; letter-spacing: .005em; color: #f2f3f4;
-    margin-top: auto;
+    font-size: 96px; line-height: 0.94; letter-spacing: .005em; color: #f2f3f4;
+    max-width: ${SAFE}px;
   }
   h1 em { font-style: normal; color: #e00014; }
 
-  .foot { margin-top: 34px; display: flex; align-items: flex-start; gap: 18px; }
-  .tab {
-    background: #e00014; color: #fff; font-family: Plex, monospace; font-size: 15px;
-    letter-spacing: .18em; text-transform: uppercase; padding: 9px 22px 9px 16px;
-    transform: skewX(-12deg);
-  }
-  .tab span { display: block; transform: skewX(12deg); }
-  .caps {
-    font-family: Plex, monospace; font-size: 15px; letter-spacing: .06em;
-    color: #a2a7ad; line-height: 1.55; padding-top: 5px; max-width: 780px;
+  .rule { margin-top: 30px; width: 132px; height: 5px; background: #e00014; }
+  .place {
+    margin-top: 24px;
+    font-family: Plex, monospace; font-size: 19px; letter-spacing: .22em;
+    text-transform: uppercase; color: #a2a7ad;
   }
 </style>
 <body>
   <div class="sweep"></div>
   <div class="inner">
     <img class="logo" src="${LOGO}">
-    <h1>We don’t just carry freight.<br><em>We carry responsibility.</em></h1>
-    <div class="foot">
-      <span class="tab"><span>Johannesburg</span></span>
-      <span class="caps">${CAPABILITIES}</span>
-    </div>
+    <p class="kicker">We don’t just carry freight.</p>
+    <h1>We carry <em>responsibility.</em></h1>
+    <div class="rule"></div>
+    <p class="place">Johannesburg &middot; Southern Africa</p>
   </div>
   <div class="bar"></div>
 </body>`;
