@@ -8,7 +8,7 @@
  * Both outputs are committed, so a normal build never needs Playwright.
  */
 import { chromium } from 'playwright';
-import { writeFileSync, unlinkSync } from 'node:fs';
+import { writeFileSync, unlinkSync, readFileSync } from 'node:fs';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -69,10 +69,14 @@ const html = `<!doctype html><meta charset="utf-8"><style>
     font-size: 34px; line-height: 1; letter-spacing: .02em; color: #a2a7ad;
     max-width: ${SAFE}px;
   }
+  /* 80px, not larger: "RESPONSIBILITY." is one unbreakable 15-character word,
+     and at 96px it ran to ~650px wide — past the 630px a square crop keeps,
+     so both ends were sliced off in WhatsApp. At 80px it lands near 540px.
+     Run this script with --proof and check the 1:1 crop before raising it. */
   h1 {
     margin-top: 14px;
     font-family: Oswald, sans-serif; font-weight: 700; text-transform: uppercase;
-    font-size: 96px; line-height: 0.94; letter-spacing: .005em; color: #f2f3f4;
+    font-size: 80px; line-height: 0.96; letter-spacing: .005em; color: #f2f3f4;
     max-width: ${SAFE}px;
   }
   h1 em { font-style: normal; color: #e00014; }
@@ -106,6 +110,32 @@ try {
   await page.waitForTimeout(400);
   await page.screenshot({ path: join(root, 'public/og.png') });
   console.log('✓ public/og.png (1200×630)');
+
+  // Safe-zone proof: chat clients centre-crop the card towards square, so
+  // check nothing important falls outside a 630×630 centre crop before
+  // shipping a layout change. `node scripts/generate-og.mjs --proof`
+  if (process.argv.includes('--proof')) {
+    // embedded as a data URI: a page created with setContent has an
+    // about:blank origin, and Chromium refuses to load file:// subresources
+    // into it, so a file path here would silently render as a broken image
+    const card =
+      'data:image/png;base64,' +
+      readFileSync(join(root, 'public/og.png')).toString('base64');
+    const proof = await browser.newPage({ viewport: { width: 1000, height: 470 }, deviceScaleFactor: 2 });
+    await proof.setContent(`<body style="margin:0;padding:16px;background:#fff;font-family:monospace">
+      <div style="display:flex;gap:22px;align-items:flex-start">
+        <div><div style="font-size:11px;margin-bottom:6px">FULL 1200×630</div>
+          <img src="${card}" width="480" style="display:block;outline:1px solid #ccc"></div>
+        <div><div style="font-size:11px;margin-bottom:6px">1:1 CENTRE CROP</div>
+          <div style="width:300px;height:300px;overflow:hidden;position:relative;outline:1px solid #ccc">
+            <img src="${card}" style="position:absolute;width:571px;height:300px;left:-135px;top:0"></div></div>
+        <div><div style="font-size:11px;margin-bottom:6px">THUMB 150px</div>
+          <img src="${card}" width="150" style="display:block;outline:1px solid #ccc"></div>
+      </div></body>`);
+    await proof.waitForTimeout(500);
+    await proof.screenshot({ path: join(root, 'scripts/shots/og-proof.png') });
+    console.log('✓ scripts/shots/og-proof.png (safe-zone proof)');
+  }
 
   // iOS home-screen icon: the favicon, rendered flat at 180px
   const icon = await browser.newPage({ viewport: { width: 180, height: 180 } });
