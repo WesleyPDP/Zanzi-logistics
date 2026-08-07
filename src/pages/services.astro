@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Tab from '../components/Tab.astro';
-import { capabilities, certifications } from '../data/company';
+import { capabilities, certifications, vehicles } from '../data/company';
 ---
 <Base
   title="Capabilities · Zanzi Logistics"
@@ -52,6 +52,37 @@ import { capabilities, certifications } from '../data/company';
           </article>
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- ═══ Vehicles ═══ -->
+  <section class="dim" id="vehicles">
+    <div class="container">
+      <div class="sec-head rv">
+        <Tab label="Vehicles" />
+        <h2 class="display">The right vehicle<br />for the <em>load.</em></h2>
+        <p class="sub">
+          From a single pallet on a one-tonner to a full super link, the vehicle
+          is matched to the freight &mdash; its mass, its dimensions and what is
+          waiting at each end. Tail-lift options are available where there is no
+          loading dock or forklift on site.
+        </p>
+      </div>
+
+      <ul class="veh-grid rv-group">
+        {vehicles.map((v) => (
+          <li class="veh">
+            <span class="veh-size">{v.size}</span>
+            {v.feature && <span class="veh-feature label">{v.feature}</span>}
+          </li>
+        ))}
+      </ul>
+
+      <p class="veh-note rv">
+        Not sure which you need? Tell us the mass, the dimensions and whether
+        there is a forklift at each end, and we will choose it for you.
+        <a class="link" href="/contact">Start there</a>.
+      </p>
     </div>
   </section>
 
@@ -156,6 +187,45 @@ import { capabilities, certifications } from '../data/company';
     .cr { grid-template-columns: 1fr; gap: 1.25rem; }
     .cr-head { flex-direction: row; align-items: baseline; gap: 1rem; }
   }
+
+  /* ── Vehicles ──
+     box-shadow rings rather than a container background: ten vehicles never
+     fill a 5- or 3-column grid, and the container would show through as
+     empty grey cells in the last row */
+  .veh-grid {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1px;
+  }
+  .veh {
+    background: var(--paper);
+    box-shadow: 0 0 0 1px var(--rule);
+    padding: 1.4rem 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border-top: 3px solid var(--red);
+  }
+  .veh-size {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .veh-feature { color: var(--red-deep); letter-spacing: 0.12em; }
+  .veh-note {
+    margin-top: clamp(1.6rem, 3vw, 2.2rem);
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--slate);
+    max-width: 64ch;
+  }
+  @media (max-width: 1040px) { .veh-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 820px) { .veh-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .veh-grid { grid-template-columns: 1fr 1fr; } }
 
   /* ── ISO ── */
   .iso-list { display: flex; flex-direction: column; }

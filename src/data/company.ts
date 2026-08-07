@@ -94,6 +94,30 @@ export const capabilities = [
 ] as const;
 
 /**
+ * Vehicle types freight can be moved on, as supplied by the client.
+ *
+ * `name` is the exact wording given and is what appears in the enquiry
+ * dropdown; `size` and `feature` only split that name up for display.
+ *
+ * ⚠️ Two items to confirm with the client before this is considered final:
+ *   - "4 ton rail lift" is almost certainly meant to be "tail lift", to
+ *     match the 8 and 16 ton entries. Left as supplied rather than guessed.
+ *   - "Super link" is normally written "Superlink" in SA road freight.
+ */
+export const vehicles = [
+  { name: '1 ton', size: '1 ton', feature: null },
+  { name: '4 ton', size: '4 ton', feature: null },
+  { name: '4 ton rail lift', size: '4 ton', feature: 'Rail lift' },
+  { name: '8 ton', size: '8 ton', feature: null },
+  { name: '8 ton tail lift', size: '8 ton', feature: 'Tail lift' },
+  { name: '12 ton', size: '12 ton', feature: null },
+  { name: '16 ton', size: '16 ton', feature: null },
+  { name: '16 ton with tail lift', size: '16 ton', feature: 'Tail lift' },
+  { name: '16 ton and trailer', size: '16 ton', feature: 'With trailer' },
+  { name: 'Super link', size: 'Super link', feature: null },
+] as const;
+
+/**
  * ISO certifications, confirmed by the client as genuinely held.
  * These are verifiable claims — do not add to this list without a
  * current certificate to back it.
